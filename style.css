@@ -1,0 +1,19 @@
+html, body {
+    margin: 0;
+    padding: 0;
+  }
+canvas {
+    display: block;
+}
+
+#a{
+    text-decoration-color: burlywood;
+    background-color: green;
+    border-color: black;
+    border-radius: 200px;
+    white-space: pre-line;
+    padding-left: 30px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
