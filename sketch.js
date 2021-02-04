@@ -4,7 +4,7 @@ function setup() {
     createCanvas(400, 400);
     frameRate(1);
 }
-
+xq
 function draw() {
     background("grey");
     if (mouseIsPressed) {
