@@ -20,3 +20,6 @@ function draw() {
     }
 }
 
+function AddNode() {
+    console.log("Yay")
+}
