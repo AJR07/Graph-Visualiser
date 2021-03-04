@@ -1,2 +1,2 @@
-.vscode
-.gitignore
+node_modules
+dist
