@@ -21,7 +21,9 @@ export default class Spring {
   update() {
     const force = p5.Vector.sub(this.b.pos, this.a.pos);
     const displacement = force.mag() - this.restLength;
-    force.normalize().mult(this.k * displacement);
+    force
+      .normalize()
+      .mult(this.k * displacement);
     this.a.applyForce(force);
     this.b.applyForce(p5.Vector.mult(force, -1));
   }
