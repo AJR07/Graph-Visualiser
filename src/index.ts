@@ -54,11 +54,36 @@ new p5((p: p5) => {
   p.draw = () => {
     p.background(0);
 
+    // Repulsion of nodes
+    for (const [, node] of nodes) {
+      let steering = p.createVector();
+      let total = 0;
+      for (const [, other] of nodes) {
+        const d = p.dist(node.pos.x, node.pos.y, other.pos.x, other.pos.y);
+        if (other != this && d < GraphNode.PERCEPTION_RADIUS && d > 0) {
+          const diff = p5.Vector.sub(node.pos, other.pos);
+          diff.div(d * d);
+          steering.add(diff);
+          total++;
+        }
+      }
+      if (total > 0) {
+        steering.div(total);
+        steering.setMag(GraphNode.MAX_SPEED);
+        steering.sub(node.vel);
+        steering.limit(GraphNode.MAX_FORCE);
+      }
+      node.applyForce(steering);
+    }
+
+
+    // Update and draw all nodes
     for (const [, node] of nodes) {
       node.update();
       node.show(p);
     }
 
+    // Update and draw all springs
     for (const spring of springs) {
       spring.update();
       spring.show(p);

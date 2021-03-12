@@ -8,6 +8,10 @@ export default class GraphNode implements SpringObject {
   vel: p5.Vector;
   acc: p5.Vector;
 
+  static PERCEPTION_RADIUS = 1000;
+  static MAX_SPEED = 10;
+  static MAX_FORCE = 0.2;
+
   constructor(p: p5, id: number, x: number, y: number) {
     this.id = id;
     this.pos = p.createVector(x, y);
