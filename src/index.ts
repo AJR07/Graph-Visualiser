@@ -7,7 +7,7 @@ import Spring from "./spring";
 // These are the default graph that's shown when the user first comes on
 const DEFAULT_GRAPH = `2 3
 1 3
-2 1`;
+4 1`;
 const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
   type: GraphType.AdjList,
   bidirectional: true,
@@ -17,6 +17,7 @@ const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
 
 // Internal representation of graph will always be adjacency list
 let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
+console.log(graph.adjlist);
 
 // The actual p5 instance that draws stuff
 new p5((p: p5) => {

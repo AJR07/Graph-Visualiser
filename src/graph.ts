@@ -64,44 +64,41 @@ export default class Graph {
           }
         }
         break;
-    
-      //supports only weights that are 1 digit only so far
+
       case GraphType.AdjList:
-        let nodeNo = options.startingIndex, w;
-        adjlist.set(nodeNo, []);
-        if (options.bidirectional) {
-          //loop through the string
-          for (let i = 0; i < str.length; i++) {
-            if (options.weighted) {
-              //if it is weighted the weight will be at the current position + 2 
-              w = parseInt(str[i + 2]);
-              i += 3; //increase i by 3 to skip the current node-weight pair
-              if (str[i] == '\n') { //if there's a new line between current node weight-pair
-                //and next node-weight pair create new part of the map
-                nodeNo++;
-                adjlist.set(nodeNo, []);
+        for (const [idx, line] of str.split("\n").entries()) {
+          const from = idx + options.startingIndex;
+          adjlist.set(from, []);
+
+          if (options.weighted) {
+            const spaceSeparated = line.split(" ");
+            for (let i = 0; i < spaceSeparated.length - 1; i += 2) {
+              const to = parseInt(spaceSeparated[i]) + options.startingIndex;
+              const weight = parseInt(spaceSeparated[i + 1]);
+              adjlist.get(from)?.push(new Pair(to, weight));
+              if (options.bidirectional) {
+                if (!adjlist.get(to)) adjlist.set(to, []);
+                adjlist.get(to)?.push(new Pair(from, weight));
               }
-              adjlist.get(nodeNo)?.push(new Pair(parseInt(str[i]), w));
-            } else {
-              w = 1; //if its not weighted default to 1
-              adjlist.get(nodeNo)?.push(new Pair(parseInt(str[i]), w));
-              i++;
-              if (str[i] == '\n') { //if there's a new line between current node weight-pair
-                //and next node-weight pair create new part of the map
-                nodeNo++;
-                adjlist.set(nodeNo, []);
+            }
+          } else {
+            for (const toS of line.split(" ")) {
+              const to = parseInt(toS) + options.startingIndex;
+              adjlist.get(from)?.push(new Pair(to, 1));
+              if (options.bidirectional) {
+                if (!adjlist.get(to)) adjlist.set(to, []);
+                adjlist.get(to)?.push(new Pair(from, 1));
               }
             }
           }
-          console.log(adjlist)
         }
         break;
 
       default:
         throw `Graph type ${options.type} not implemented`;
-      
-      
-      
+
+
+
       // TODO: Implement other graph types
     }
 
