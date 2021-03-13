@@ -70,16 +70,27 @@ export default class Graph {
         let nodeNo = options.startingIndex, w;
         adjlist.set(nodeNo, []);
         if (options.bidirectional) {
+          //loop through the string
           for (let i = 0; i < str.length; i++) {
             if (options.weighted) {
+              //if it is weighted the weight will be at the current position + 2 
               w = parseInt(str[i + 2]);
-            } else w = 1;
-            adjlist.get(nodeNo)?.push(new Pair(parseInt(str[i]), w));
-            i += 3;
-            if (str[i] == '\n') {
-              nodeNo++;
-              adjlist.set(nodeNo, []);
-              continue;
+              i += 3; //increase i by 3 to skip the current node-weight pair
+              if (str[i] == '\n') { //if there's a new line between current node weight-pair
+                //and next node-weight pair create new part of the map
+                nodeNo++;
+                adjlist.set(nodeNo, []);
+              }
+              adjlist.get(nodeNo)?.push(new Pair(parseInt(str[i]), w));
+            } else {
+              w = 1; //if its not weighted default to 1
+              adjlist.get(nodeNo)?.push(new Pair(parseInt(str[i]), w));
+              i++;
+              if (str[i] == '\n') { //if there's a new line between current node weight-pair
+                //and next node-weight pair create new part of the map
+                nodeNo++;
+                adjlist.set(nodeNo, []);
+              }
             }
           }
           console.log(adjlist)
