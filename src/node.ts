@@ -8,6 +8,8 @@ export default class GraphNode implements SpringObject {
   vel: p5.Vector;
   acc: p5.Vector;
 
+  size = 50;
+
   static PERCEPTION_RADIUS = 1000;
   static MAX_SPEED = 10;
   static MAX_FORCE = 0.2;
@@ -30,6 +32,14 @@ export default class GraphNode implements SpringObject {
   }
 
   show(p: p5) {
-    p.circle(this.pos.x, this.pos.y, 50);
+    p
+      .fill(255)
+      .circle(this.pos.x, this.pos.y, this.size)
+      .textAlign(p.CENTER, p.CENTER)
+      .noStroke()
+      .fill(0)
+      .textSize(20)
+      .text(`${this.id}`, this.pos.x, this.pos.y)
+      ;
   }
 }

@@ -1,4 +1,5 @@
 import p5 from "p5";
+import clamp from "./clamp";
 import Graph, { GraphOptions, GraphType } from "./graph";
 import GraphNode from "./node";
 import Spring from "./spring";
@@ -76,17 +77,62 @@ new p5((p: p5) => {
       node.applyForce(steering);
     }
 
-
-    // Update and draw all nodes
+    // Repulse from the walls (failed attempt at keeping stuff from drifting away)
+    /*
     for (const [, node] of nodes) {
-      node.update();
-      node.show(p);
+      let steering = p.createVector();
+      const repulseWall = (x: number, y: number) => {
+        const v = p5.Vector.sub(p.createVector(x, y), node.pos);
+        if (v.mag() < 0) return;
+        steering
+          .setMag(GraphNode.MAX_SPEED)
+          .sub(node.vel)
+          .add(v)
+          .div(v.mag() * v.mag());
+      };
+
+      repulseWall(0, node.pos.y); // left
+      repulseWall(node.pos.x, 0); // top
+      repulseWall(p.width, node.pos.y) // right
+      repulseWall(node.pos.x, p.height); // bottom
+
+      node.applyForce(steering);
     }
+    */
+
+    // Attracted to center??
+    for (const [, node] of nodes) {
+      node.applyForce(
+        p5.Vector.sub(
+          p.createVector(p.width / 2, p.height / 2),
+          node.pos,
+        )
+          .setMag(GraphNode.MAX_SPEED)
+          .sub(node.vel)
+          .limit(GraphNode.MAX_FORCE / 2)
+        ,
+      );
+    }
+
+    // Force the nodes to be inside the screen
+    for (const [, node] of nodes) {
+      node.pos.set(
+        clamp(node.pos.x, node.size, p.width - node.size),
+        clamp(node.pos.y, node.size, p.height - node.size),
+      );
+    }
+
 
     // Update and draw all springs
     for (const spring of springs) {
       spring.update();
       spring.show(p);
+    }
+
+    // Update and draw all nodes
+    for (const [, node] of nodes) {
+      node.update();
+      node.show(p);
     }
   };
 });
