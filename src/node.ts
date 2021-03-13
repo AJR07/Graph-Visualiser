@@ -12,7 +12,7 @@ export default class GraphNode implements SpringObject {
 
   static PERCEPTION_RADIUS = 1000;
   static MAX_SPEED = 10;
-  static MAX_FORCE = 0.2;
+  static MAX_FORCE = 0.5;
 
   constructor(p: p5, id: number, x: number, y: number) {
     this.id = id;

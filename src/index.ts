@@ -15,6 +15,8 @@ const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
   startingIndex: 1,
 };
 
+const EPSILON = 0.0001;
+
 // Internal representation of graph will always be adjacency list
 let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
 console.log(graph.adjlist);
@@ -69,10 +71,11 @@ new p5((p: p5) => {
       let total = 0;
       // You visit every other node
       for (const [, other] of nodes) {
-        const d = p.dist(node.pos.x, node.pos.y, other.pos.x, other.pos.y);
+        let d = p.dist(node.pos.x, node.pos.y, other.pos.x, other.pos.y);
         // If the other node is not your own
         // And if the other node is within your perception radius
-        if (other != this && d < GraphNode.PERCEPTION_RADIUS && d > 0) {
+        if (d <= 0) d = EPSILON;
+        if (other != this && d < GraphNode.PERCEPTION_RADIUS) {
           // You add a force pointing from the other's position to the your position
           const diff = p5.Vector.sub(node.pos, other.pos);
           diff.div(d * d);
@@ -135,6 +138,15 @@ new p5((p: p5) => {
           .limit(GraphNode.MAX_FORCE / 2)
         ,
       );
+    }
+
+    // Add some random force to keep things interesting
+    for (const [, node] of nodes) {
+      const force = p.createVector();
+      const dir = p.noise(node.pos.x, node.pos.y);
+      force.setMag(100);
+      force.rotate(p.map(dir, 0, 1, 0, p.TWO_PI));
+      node.vel.add(force);
     }
 
     // Force the nodes to be inside the screen
