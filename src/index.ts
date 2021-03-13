@@ -4,6 +4,7 @@ import Graph, { GraphOptions, GraphType } from "./graph";
 import GraphNode from "./node";
 import Spring from "./spring";
 
+// These are the default graph that's shown when the user first comes on
 const DEFAULT_GRAPH = `1 2 1
 1 3 5
 2 6 3
@@ -19,14 +20,18 @@ const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
 // Internal representation of graph will always be adjacency list
 let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
 
+// The actual p5 instance that draws stuff
 new p5((p: p5) => {
+  // The stuff to be drawn
+  // Nodes are graph nodes and are just circles
+  // Its stored in a Map (similar to c++ map)
+  // Where the key is the idx of the node 
   let nodes: Map<number, GraphNode> = new Map();
+  // Springs control the spring forces between the nodes
   let springs: Spring[] = [];
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
-
-    console.log(graph.adjlist);
 
     // Create nodes based on graph representation
     for (const [key] of graph.adjlist) {
@@ -34,6 +39,10 @@ new p5((p: p5) => {
     }
 
     // Create springs (dfs)
+    // The idea is that when you dfs you visit every edge once
+    // So you create a spring connecting the 2 nodes
+    // Right now it doesn't deal with one-directional edges
+    // Imma deal with that later
     const visited = new Set<number>();
     function dfs(idx: number, previous: number | null) {
       visited.add(idx);
@@ -49,19 +58,23 @@ new p5((p: p5) => {
       }
     }
     dfs(graph.options.startingIndex, null);
-
   };
 
   p.draw = () => {
     p.background(0);
 
-    // Repulsion of nodes
+    // REPULSION OF NODES
+    // For every node...
     for (const [, node] of nodes) {
       let steering = p.createVector();
       let total = 0;
+      // You visit every other node
       for (const [, other] of nodes) {
         const d = p.dist(node.pos.x, node.pos.y, other.pos.x, other.pos.y);
+        // If the other node is not your own
+        // And if the other node is within your perception radius
         if (other != this && d < GraphNode.PERCEPTION_RADIUS && d > 0) {
+          // You add a force pointing from the other's position to the your position
           const diff = p5.Vector.sub(node.pos, other.pos);
           diff.div(d * d);
           steering.add(diff);
@@ -69,11 +82,18 @@ new p5((p: p5) => {
         }
       }
       if (total > 0) {
+        // We divide by the total to find the average 
         steering.div(total);
+        // We set its magnitude to the max speed
+        // So it always moves at that speed
         steering.setMag(GraphNode.MAX_SPEED);
+        // Subtract the direction from the velocity
+        // to get the steering
         steering.sub(node.vel);
+        // We limit the force so it doesn't go too crazy
         steering.limit(GraphNode.MAX_FORCE);
       }
+      // We actually apply that force
       node.applyForce(steering);
     }
 
@@ -100,21 +120,26 @@ new p5((p: p5) => {
     }
     */
 
-    // Attracted to center??
+    // Attracted to center
     for (const [, node] of nodes) {
       node.applyForce(
+        // You get a vector pointing from your position to the center
         p5.Vector.sub(
           p.createVector(p.width / 2, p.height / 2),
           node.pos,
         )
+          // Set its speed (like above)
           .setMag(GraphNode.MAX_SPEED)
+          // Subtract to get the steering (like above)
           .sub(node.vel)
+          // Limit the force (like above)
           .limit(GraphNode.MAX_FORCE / 2)
         ,
       );
     }
 
     // Force the nodes to be inside the screen
+    // Basically we just clamp the position inside the screen lol
     for (const [, node] of nodes) {
       node.pos.set(
         clamp(node.pos.x, node.size, p.width - node.size),

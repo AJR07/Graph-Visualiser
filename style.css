@@ -1,24 +1,5 @@
-html, body {
-    margin: 0;
-    padding: 0;
-  }
-canvas {
-    display: block;
-}
-
-#a{
-    text-decoration-color: burlywood;
-    text-size-adjust: auto;
-    background-color: green;
-    border-color: black;
-    white-space: pre-line;
-    padding-left: 30px;
-    padding-right: 20px;
-    padding-bottom: 20px;
-}
-
-button{
-    background-color: chartreuse;
-    border-radius: 10px;
-    
+html,
+body {
+  margin: 0;
+  padding: 0;
 }

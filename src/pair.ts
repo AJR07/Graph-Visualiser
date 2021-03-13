@@ -1,18 +1,11 @@
-import Hashids from "hashids";
-import { Hashable } from "./myset";
+/// Basically like C++ pair
+export default class Pair<First, Second> {
+  first: First;
+  second: Second;
 
-export default class Pair implements Hashable {
-  first: number;
-  second: number;
-
-  constructor(first: number, second: number) {
+  constructor(first: First, second: Second) {
     this.first = first;
     this.second = second;
-  }
-
-  hash(): string {
-    const hashids = new Hashids();
-    return hashids.encode(this.first, this.second);
   }
 
   toString(): string {
