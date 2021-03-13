@@ -1,10 +1,11 @@
-# draw-graph (WORK IN PROGRESS)
+# Graph Representation tool (WORK IN PROGRESS)
 Graph Drawing given some edges and connected or not (supposed to help for CP)
 
 ## TODO
 - Add support for parsing different graph types
 - Support for representing one-directional edges
 - Actually let the user paste in the graph they want to visualize
+- Support for unconnected nodes
 - Figure out what to do when graph is too big for screen:
   - scale out OR
   - ability pan around OR

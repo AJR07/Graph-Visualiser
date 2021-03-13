@@ -64,8 +64,33 @@ export default class Graph {
           }
         }
         break;
+    
+      //supports only weights that are 1 digit only so far
+      case GraphType.AdjList:
+        let nodeNo = options.startingIndex, w;
+        adjlist.set(nodeNo, []);
+        if (options.bidirectional) {
+          for (let i = 0; i < str.length; i++) {
+            if (options.weighted) {
+              w = parseInt(str[i + 2]);
+            } else w = 1;
+            adjlist.get(nodeNo)?.push(new Pair(parseInt(str[i]), w));
+            i += 3;
+            if (str[i] == '\n') {
+              nodeNo++;
+              adjlist.set(nodeNo, []);
+              continue;
+            }
+          }
+          console.log(adjlist)
+        }
+        break;
+
       default:
         throw `Graph type ${options.type} not implemented`;
+      
+      
+      
       // TODO: Implement other graph types
     }
 

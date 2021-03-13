@@ -5,13 +5,11 @@ import GraphNode from "./node";
 import Spring from "./spring";
 
 // These are the default graph that's shown when the user first comes on
-const DEFAULT_GRAPH = `1 2 1
-1 3 5
-2 6 3
-4 6 2
-5 6 3`;
+const DEFAULT_GRAPH = `2 5 3 2
+1 5 3 1
+2 3 1 2`;
 const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
-  type: GraphType.EdgeList,
+  type: GraphType.AdjList,
   bidirectional: true,
   weighted: true,
   startingIndex: 1,
