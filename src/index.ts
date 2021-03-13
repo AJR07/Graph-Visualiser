@@ -1,19 +1,25 @@
 import p5 from "p5";
+import Vue from "vue";
+import Queue from "../queue";
 import clamp from "./clamp";
 import Graph, { GraphOptions, GraphType } from "./graph";
 import GraphNode from "./node";
 import Spring from "./spring";
 
 // These are the default graph that's shown when the user first comes on
-const DEFAULT_GRAPH = `2 3
-1 3
-4 1`;
+const DEFAULT_GRAPH = `1 2 1
+1 3 5
+2 6 3
+4 6 2
+5 6 3
+5 2 1`;
 const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
-  type: GraphType.AdjList,
+  type: GraphType.EdgeList,
   bidirectional: true,
-  weighted: false,
+  weighted: true,
   startingIndex: 1,
 };
+
 
 const EPSILON = 0.0001;
 
@@ -21,48 +27,43 @@ const EPSILON = 0.0001;
 let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
 console.log(graph.adjlist);
 
+// The stuff to be drawn
+// Nodes are graph nodes and are just circles
+// Its stored in a Map (similar to c++ map)
+// Where the key is the idx of the node 
+let nodes: Map<number, GraphNode> = new Map();
+// Springs control the spring forces between the nodes
+let springs: Spring[] = [];
+
+// Queue of stuff for the update() method to handle
+let queue: Queue<(p: p5) => void> = new Queue();
+
 // The actual p5 instance that draws stuff
 new p5((p: p5) => {
-  // The stuff to be drawn
-  // Nodes are graph nodes and are just circles
-  // Its stored in a Map (similar to c++ map)
-  // Where the key is the idx of the node 
-  let nodes: Map<number, GraphNode> = new Map();
-  // Springs control the spring forces between the nodes
-  let springs: Spring[] = [];
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
 
     // Create nodes based on graph representation
-    for (const [key] of graph.adjlist) {
-      nodes.set(key, new GraphNode(p, key, p.random(p.width), p.random(p.height)));
-    }
+    updateNodes(p);
 
     // Create springs (dfs)
     // The idea is that when you dfs you visit every edge once
     // So you create a spring connecting the 2 nodes
     // Right now it doesn't deal with one-directional edges
     // Imma deal with that later
-    const visited = new Set<number>();
-    function dfs(idx: number, previous: number | null) {
-      visited.add(idx);
-
-      if (previous) {
-        springs.push(new Spring(0.01, 200, nodes.get(idx)!, nodes.get(previous)!));
-      }
-
-      for (const next of graph.adjlist.get(idx)!) {
-        if (!visited.has(next.first)) {
-          dfs(next.first, idx);
-        }
-      }
-    }
-    dfs(graph.options.startingIndex, null);
+    updateSprings();
   };
 
   p.draw = () => {
     p.background(0);
+
+    // HANDLE EVENTS 
+    let task = queue.pop();
+    while (task) {
+      task(p);
+      task = queue.pop();
+    }
 
     // REPULSION OF NODES
     // For every node...
@@ -112,12 +113,12 @@ new p5((p: p5) => {
           .add(v)
           .div(v.mag() * v.mag());
       };
-
+ 
       repulseWall(0, node.pos.y); // left
       repulseWall(node.pos.x, 0); // top
       repulseWall(p.width, node.pos.y) // right
       repulseWall(node.pos.x, p.height); // bottom
-
+ 
       node.applyForce(steering);
     }
     */
@@ -172,3 +173,51 @@ new p5((p: p5) => {
     }
   };
 });
+
+const vm = new Vue({
+  el: "#vue-app",
+  data() {
+    return {
+      graphText: DEFAULT_GRAPH,
+      graphOptions: DEFAULT_GRAPH_OPTIONS,
+    }
+  },
+  methods: {
+    updateGraph() {
+      console.log("updating graph");
+      queue.push((p: p5) => {
+        graph = Graph.parseGraph(this.graphText, this.graphOptions);
+        updateNodes(p);
+        updateSprings();
+      });
+    },
+  },
+});
+
+function updateNodes(p: p5) {
+  nodes = new Map();
+
+  for (const [key] of graph.adjlist) {
+    nodes.set(key, new GraphNode(p, key, p.random(p.width), p.random(p.height)));
+  }
+}
+
+function updateSprings() {
+  springs = [];
+
+  const visited = new Set<number>();
+  function dfs(idx: number, previous: number | null) {
+    visited.add(idx);
+
+    if (previous) {
+      springs.push(new Spring(0.01, 200, nodes.get(idx)!, nodes.get(previous)!));
+    }
+
+    for (const next of graph.adjlist.get(idx)!) {
+      if (!visited.has(next.first)) {
+        dfs(next.first, idx);
+      }
+    }
+  }
+  dfs(graph.options.startingIndex, null);
+}

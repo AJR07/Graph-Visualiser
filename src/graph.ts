@@ -94,12 +94,12 @@ export default class Graph {
         }
         break;
 
+      case GraphType.AdjMatrix:
+
+        break;
+
       default:
         throw `Graph type ${options.type} not implemented`;
-
-
-
-      // TODO: Implement other graph types
     }
 
     return new Graph(adjlist, options);

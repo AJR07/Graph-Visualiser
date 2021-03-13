@@ -5,5 +5,47 @@
     <meta charset="utf-8" />
     <script defer type="module" src="src/index.js"></script>
   </head>
-  <body></body>
+  <body>
+    <main>
+      <div id="vue-app">
+        <label for="bidirectional-checkbox"> Bi-directional: </label>
+        <input
+          type="checkbox"
+          @change="updateGraph"
+          v-model="graphOptions.bidirectional"
+          name="bidirectional-checkbox"
+          id="bidirectional-checkbox"
+        />
+        <br />
+        <label for="graphtype-select">Graph Type:</label>
+        <select
+          name="graphtype-select"
+          id="graphtype-select"
+          v-model="graphOptions.type"
+          @change="updateGraph"
+        >
+          <option value="AdjList">Adjacency List</option>
+          <option value="EdgeList">Edge List</option>
+          <option value="AdjMatrix">Adjacency Matrix</option>
+        </select>
+        <br />
+        <label for="weighted-checkbox">Weighted:</label>
+        <input
+          type="checkbox"
+          name="weighted-checkbox"
+          id="weighted-checkbox"
+          v-model="graphOptions.weighted"
+          @change="updateGraph"
+        />
+        <textarea
+          name="graph-text"
+          id="graph-text"
+          cols="30"
+          rows="10"
+          v-model="graphText"
+        ></textarea>
+        <button @click="updateGraph">Apply</button>
+      </div>
+    </main>
+  </body>
 </html>
