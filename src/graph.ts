@@ -75,22 +75,15 @@ export default class Graph {
               const to = parseInt(spaceSeparated[i]) + options.startingIndex;
               const weight = parseInt(spaceSeparated[i + 1]);
               adjlist.get(from)?.push(new Pair(to, weight));
-              if (options.bidirectional) {
-                if (!adjlist.get(to)) adjlist.set(to, []);
-                adjlist.get(to)?.push(new Pair(from, weight));
-              }
             }
           } else {
             for (const toS of line.split(" ")) {
               const to = parseInt(toS) + options.startingIndex;
               adjlist.get(from)?.push(new Pair(to, 1));
-              if (options.bidirectional) {
-                if (!adjlist.get(to)) adjlist.set(to, []);
-                adjlist.get(to)?.push(new Pair(from, 1));
-              }
             }
           }
         }
+        console.log(adjlist);
         break;
 
       default:
