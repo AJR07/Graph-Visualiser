@@ -12,13 +12,13 @@ function adjlistParser(str: string, options: GraphOptions): Graph {
     if (options.weighted) {
       const spaceSeparated = line.split(" ");
       for (let i = 0; i < spaceSeparated.length - 1; i += 2) {
-        const to = parseInt(spaceSeparated[i]) + options.startingIndex;
-        const weight = parseInt(spaceSeparated[i + 1]);
+        const to = parseInt(spaceSeparated[i], 10) + options.startingIndex;
+        const weight = parseInt(spaceSeparated[i + 1], 10);
         adjlist.get(from)?.push(new Pair(to, weight));
       }
     } else {
       for (const toS of line.split(" ")) {
-        const to = parseInt(toS) + options.startingIndex;
+        const to = parseInt(toS, 10) + options.startingIndex;
         adjlist.get(from)?.push(new Pair(to, 1));
       }
     }
@@ -38,9 +38,9 @@ function edgeListParser(str: string, options: GraphOptions): Graph {
 
     // We parse the string into int
     // TODO: Check for invalid input like not number, negatives, etc
-    const a = parseInt(aS);
-    const b = parseInt(bS);
-    const w = options.weighted ? parseInt(wS) : 1; // if its unweighted, the weight will default to 1
+    const a = parseInt(aS, 10);
+    const b = parseInt(bS, 10);
+    const w = options.weighted ? parseInt(wS, 10) : 1; // if its unweighted, the weight will default to 1
 
     // If the node doesn't exist yet, create a empty array there
     if (!adjlist.has(a)) adjlist.set(a, []);
