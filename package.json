@@ -12,7 +12,6 @@
     "test:lint": "npx eslint .",
     "test:format": "npx prettier --check .",
     "test:jest": "npx jest",
-    "postinstall": "npx is-ci || (npx husky install; npm run clear-webpack-cache)",
     "clear-webpack-cache": "npx rimraf node_modules/.cache/webpack"
   },
   "repository": {
