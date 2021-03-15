@@ -5,14 +5,14 @@
   "main": "index.ts",
   "private": true,
   "scripts": {
-    "dev": "npx cross-env NODE_ENV=development webpack serve",
-    "build": "npx cross-env NODE_ENV=production webpack",
-    "format": "npx prettier --write .",
+    "dev": "cross-env NODE_ENV=development webpack serve",
+    "build": "cross-env NODE_ENV=production webpack",
+    "format": "prettier --write .",
     "test": "npm run test:lint && npm run test:format && npm run test:jest",
-    "test:lint": "npx eslint .",
-    "test:format": "npx prettier --check .",
-    "test:jest": "npx jest",
-    "clear-webpack-cache": "npx rimraf node_modules/.cache/webpack"
+    "test:lint": "eslint .",
+    "test:format": "prettier --check .",
+    "test:jest": "jest",
+    "clear-webpack-cache": "rimraf node_modules/.cache/webpack"
   },
   "repository": {
     "type": "git",
