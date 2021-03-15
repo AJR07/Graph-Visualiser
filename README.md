@@ -14,9 +14,10 @@
 
 ## Documentation
 
-<iframe src="https://USERNAME.github.io/RESPOSITORY"></iframe>
+### Github Pages (Not set up yet)
+<iframe src="https://ajr07.github.io/Graph-VisualiserY"></iframe>
 
-### Graph Types
+### Supported Graph Types
 
 NOTE: All these are assuming bi-directional, the directed option should be pretty self explanatory
 
