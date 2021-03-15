@@ -1,4 +1,4 @@
-import PARSERS from "../parsers";
+import PARSERS from "./parsers";
 import Pair from "./pair";
 // "typedef" for adjacency list
 // The pair is Pair(node, weight)

@@ -1,5 +1,5 @@
-import Graph, { GraphOptions, GraphType } from "./src/graph";
-import Pair from "./src/pair";
+import Graph, { GraphOptions, GraphType } from "./graph";
+import Pair from "./pair";
 
 type GraphParser = (str: string, options: GraphOptions) => Graph;
 
