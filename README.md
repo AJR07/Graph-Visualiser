@@ -1,10 +1,8 @@
 # Graph Visualization tool
 
-Graph Drawing given some edges and connected or not (supposed to help for CP)
-
 ## TODO
 
-- Add support for parsing different graph types
+- Add support for Adjacency Matrix
 - Support for representing one-directional edges
 - Actually let the user paste in the graph they want to visualize
 - Support for unconnected nodes
@@ -16,11 +14,14 @@ Graph Drawing given some edges and connected or not (supposed to help for CP)
 
 ## Documentation
 
-### Graph Types
+### Github Pages (Not set up yet)
+
+
+### Supported Graph Types
 
 NOTE: All these are assuming bi-directional, the directed option should be pretty self explanatory
 
-#### Adjacency List
+#### 1. Adjacency List
 
 **Options**  
 The `bidirectional` option doesn't apply here
@@ -73,7 +74,7 @@ Format:
 </tr>
 </table>
 
-#### Edge List
+#### 2. Edge List
 
 **Unweighted**  
 Format: For every line of input `[a] [b]`, means there is a edge connecting node `a` to node `b`.
@@ -129,7 +130,7 @@ Format: For every line of input `[a] [b] [w]`, means that there is a edge connec
 </tr>
 </table>
 
-#### Adjacency Matrix
+#### 3. Adjacency Matrix
 
 Format: For every `i`th line, the `n`th number in that line (space separated) means there is a edge connecting node `i` to node `n`.
 If the graph is weighted, then the weight of the edge connecting node `i` to node `n` is the `n`th number at the `i`th row.

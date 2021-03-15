@@ -90,5 +90,21 @@ describe("Adjacency List", () => {
         [6, [new Pair(2, 3), new Pair(4, 2), new Pair(5, 3)]],
       ]),
     ],
+    [
+      "2 3 5\n1 4 5\n1 2\n3\n1 4",
+      {
+        type: GraphType.AdjList,
+        bidirectional: true,
+        weighted: false,
+        startingIndex: 1,
+      },
+      new Map([
+        [1, [new Pair(2, 1), new Pair(3, 1), new Pair(5, 1)]],
+        [2, [new Pair(1, 1), new Pair(4, 1), new Pair(5, 1)]],
+        [3, [new Pair(1, 1), new Pair(2, 1)]],
+        [4, [new Pair(3, 1)]],
+        [5, [new Pair(1, 1), new Pair(4, 1)]],
+      ]),
+    ],
   ])(formatStr, testFn);
 });

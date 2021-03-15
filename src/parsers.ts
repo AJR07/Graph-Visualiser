@@ -25,10 +25,12 @@ function adjlistParser(str: string, options: GraphOptions): Graph {
   }
   return new Graph(adjlist, options);
 }
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function adjMatrixParser(str: string, options: GraphOptions): Graph {
   throw new Error("Not implemented");
 }
+
 function edgeListParser(str: string, options: GraphOptions): Graph {
   const adjlist = new Map();
   for (const line of str.split("\n")) {
@@ -53,7 +55,25 @@ function edgeListParser(str: string, options: GraphOptions): Graph {
       adjlist.get(b)?.push(new Pair(a, w));
     }
   }
+  console.log(
+    "this is the edge list:",
+    AdjtoEdgeListParser(new Graph(adjlist, options))
+  );
   return new Graph(adjlist, options);
+}
+
+function AdjtoEdgeListParser(
+  adjList: Graph
+): (number | Pair<number, number>)[][] {
+  const graph = adjList.adjlist,
+    edgList: (number | Pair<number, number>)[][] = [];
+  for (const [key, value] of graph.entries()) {
+    for (const i of value) {
+      if (!edgList.includes([new Pair(i.second, key), i.first]))
+        edgList.push([new Pair(i.first, key), i.second]);
+    }
+  }
+  return edgList;
 }
 
 const PARSERS: { [k in GraphType]: GraphParser } = {
