@@ -15,7 +15,7 @@
 ## Documentation
 
 ### Github Pages (Not set up yet)
-<iframe src="https://ajr07.github.io/Graph-VisualiserY"></iframe>
+
 
 ### Supported Graph Types
 
