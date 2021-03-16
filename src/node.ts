@@ -25,21 +25,19 @@ export default class GraphNode implements SpringObject {
     this.acc.add(force);
   }
 
-  update() {
+  update(): void {
     this.vel.mult(0.9).add(this.acc);
     this.pos.add(this.vel);
     this.acc.set(0, 0);
   }
 
-  show(p: p5) {
-    p
-      .fill(255)
+  show(p: p5): void {
+    p.fill(255)
+      .noStroke()
       .circle(this.pos.x, this.pos.y, this.size)
       .textAlign(p.CENTER, p.CENTER)
-      .noStroke()
       .fill(0)
       .textSize(20)
-      .text(`${this.id}`, this.pos.x, this.pos.y)
-      ;
+      .text(`${this.id}`, this.pos.x, this.pos.y);
   }
 }

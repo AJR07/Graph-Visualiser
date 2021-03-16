@@ -1,5 +1,5 @@
 import Pair from "./pair";
-
+import PARSERS from "./parsers";
 // "typedef" for adjacency list
 // The pair is Pair(node, weight)
 export type AdjList = Map<number, Pair<number, number>[]>;
@@ -31,78 +31,21 @@ export default class Graph {
 
   /**
    * Parses a graph from a string using the provided options
-   * 
+   *
    * @param str The string to parse
    * @param options The graph options
    * @returns The parsed graph
    */
   static parseGraph(str: string, options: GraphOptions): Graph {
-    let adjlist: AdjList = new Map();
-
-    switch (options.type) {
-      case GraphType.EdgeList:
-        for (const line of str.split("\n")) {
-          // A, B and weight as string
-          const [aS, bS, wS] = line.split(" ");
-          if (!aS || !bS || !wS) continue;
-
-          // We parse the string into int
-          // TODO: Check for invalid input like not number, negatives, etc
-          const a = parseInt(aS);
-          const b = parseInt(bS);
-          const w = options.weighted ? parseInt(wS) : 1; // if its unweighted, the weight will default to 1
-
-          // If the node doesn't exist yet, create a empty array there
-          if (!adjlist.has(a)) adjlist.set(a, []);
-          // We push the new node + weight into the adjacency list
-          adjlist.get(a)?.push(new Pair(b, w));
-
-          // we do the same for the opposite if its bidirectional
-          if (options.bidirectional) {
-            if (!adjlist.has(b)) adjlist.set(b, []);
-            adjlist.get(b)?.push(new Pair(a, w));
-          }
-        }
-        break;
-
-      case GraphType.AdjList:
-        for (const [idx, line] of str.split("\n").entries()) {
-          const from = idx + options.startingIndex;
-          adjlist.set(from, []);
-
-          if (options.weighted) {
-            const spaceSeparated = line.split(" ");
-            for (let i = 0; i < spaceSeparated.length - 1; i += 2) {
-              const to = parseInt(spaceSeparated[i]) + options.startingIndex;
-              const weight = parseInt(spaceSeparated[i + 1]);
-              adjlist.get(from)?.push(new Pair(to, weight));
-              if (options.bidirectional) {
-                if (!adjlist.get(to)) adjlist.set(to, []);
-                adjlist.get(to)?.push(new Pair(from, weight));
-              }
-            }
-          } else {
-            for (const toS of line.split(" ")) {
-              const to = parseInt(toS) + options.startingIndex;
-              adjlist.get(from)?.push(new Pair(to, 1));
-              if (options.bidirectional) {
-                if (!adjlist.get(to)) adjlist.set(to, []);
-                adjlist.get(to)?.push(new Pair(from, 1));
-              }
-            }
-          }
-        }
-        break;
-
-      case GraphType.AdjMatrix:
-
-        break;
-
-      default:
-        throw `Graph type ${options.type} not implemented`;
-    }
-
-    return new Graph(adjlist, options);
+    return PARSERS[options.type](str, options);
   }
-
 }
+
+// These are the default graph that's shown when the user first comes on
+export const DEFAULT_GRAPH = "1 2 1\n1 3 4\n2 6 3\n4 6 2\n5 6 3";
+export const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
+  type: GraphType.EdgeList,
+  bidirectional: true,
+  weighted: true,
+  startingIndex: 1,
+};

@@ -1,4 +1,4 @@
-import p5 from 'p5';
+import p5 from "p5";
 
 export interface SpringObject {
   applyForce(force: p5.Vector): void;
@@ -18,19 +18,16 @@ export default class Spring {
     this.b = b;
   }
 
-  update() {
+  update(): void {
     const force = p5.Vector.sub(this.b.pos, this.a.pos);
     const displacement = force.mag() - this.restLength;
-    force
-      .normalize()
-      .mult(this.k * displacement);
+    force.normalize().mult(this.k * displacement);
     this.a.applyForce(force);
     this.b.applyForce(p5.Vector.mult(force, -1));
   }
 
-  show(p: p5) {
-    p
-      .strokeWeight(3)
+  show(p: p5): void {
+    p.strokeWeight(3)
       .stroke(255)
       .line(this.a.pos.x, this.a.pos.y, this.b.pos.x, this.b.pos.y);
   }
