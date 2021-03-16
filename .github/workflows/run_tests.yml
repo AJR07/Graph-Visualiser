@@ -18,8 +18,11 @@ jobs:
         with:
           node-version: "15"
 
-      - name: 🔧 Install
+      - name: 📦 Install
         run: npm ci
+
+      - build: 🔧 Build
+        run: npm run build
 
       - name: 🧪 Test
         run: npm test
