@@ -10,18 +10,40 @@ export default class Edge {
   restLength: number;
   a: SpringObject;
   b: SpringObject;
+
   weight: number;
+  maxWeight: number;
+  minWeight: number;
+
+  static MIN_LENGTH = 50;
+  static MAX_LENGTH = 300;
+  static MIN_WEIGHT = 1;
+  static MAX_WEIGHT = 10;
 
   constructor(
+    p: p5,
     k: number,
-    restLength: number,
     weight: number,
+    minWeight: number,
+    maxWeight: number,
     a: SpringObject,
     b: SpringObject
   ) {
     this.k = k;
-    this.restLength = restLength;
+
+    // Higher weight == longer length
+    this.restLength = 200;
+    // this.restLength = p.map(
+    //   weight,
+    //   minWeight,
+    //   maxWeight,
+    //   Edge.MIN_LENGTH,
+    //   Edge.MAX_LENGTH
+    // );
+    this.minWeight = minWeight;
+    this.maxWeight = maxWeight;
     this.weight = weight;
+
     this.a = a;
     this.b = b;
   }
@@ -36,7 +58,16 @@ export default class Edge {
 
   show(p: p5): void {
     // Line
-    p.strokeWeight(3)
+    p.strokeWeight(
+      p.map(
+        this.weight,
+        this.minWeight,
+        this.maxWeight,
+        Edge.MIN_WEIGHT,
+        Edge.MAX_WEIGHT
+      )
+      // 3
+    )
       .stroke(255)
       .line(this.a.pos.x, this.a.pos.y, this.b.pos.x, this.b.pos.y);
 

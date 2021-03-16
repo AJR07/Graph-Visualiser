@@ -39,7 +39,7 @@ new p5((p: p5) => {
     // So you create a spring connecting the 2 nodes
     // Right now it doesn't deal with one-directional edges
     // Imma deal with that later
-    updateSprings();
+    updateSprings(p);
   };
 
   p.draw = () => {
@@ -194,7 +194,7 @@ new Vue({
       queue.push((p: p5) => {
         graph = Graph.parseGraph(this.graphText, this.graphOptions);
         updateNodes(p);
-        updateSprings();
+        updateSprings(p);
       });
     },
   },
@@ -211,12 +211,28 @@ function updateNodes(p: p5) {
   }
 }
 
-function updateSprings() {
+function updateSprings(p: p5) {
   springs = [];
+
+  let maxWeight = -Infinity;
+  let minWeight = Infinity;
+
+  for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
+    if (edge[2] > maxWeight) maxWeight = edge[2];
+    if (edge[2] < minWeight) minWeight = edge[2];
+  }
 
   for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
     springs.push(
-      new Edge(0.01, 200, edge[2], nodes.get(edge[0])!, nodes.get(edge[1])!)
+      new Edge(
+        p,
+        0.01,
+        edge[2],
+        minWeight,
+        maxWeight,
+        nodes.get(edge[0])!,
+        nodes.get(edge[1])!
+      )
     );
   }
 }
