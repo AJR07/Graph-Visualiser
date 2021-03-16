@@ -63,6 +63,8 @@ export default class Graph {
   }
 }
 
+export const DEFAULT_GRAPH = "1 2 1\n1 3 5\n2 6 3\n4 6 2\n5 6 3";
+
 export const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
   type: GraphType.EdgeList,
   bidirectional: true,

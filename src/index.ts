@@ -154,7 +154,7 @@ new p5((p: p5) => {
   };
 });
 
-const vm = new Vue({
+new Vue({
   el: "#vue-app",
   data() {
     return {
@@ -188,21 +188,9 @@ function updateNodes(p: p5) {
 function updateSprings() {
   springs = [];
 
-  const visited = new Set<number>();
-  function dfs(idx: number, previous: number | null) {
-    visited.add(idx);
-
-    if (previous) {
-      springs.push(
-        new Spring(0.01, 200, nodes.get(idx)!, nodes.get(previous)!)
-      );
-    }
-
-    for (const next of graph.adjlist.get(idx)!) {
-      if (!visited.has(next.first)) {
-        dfs(next.first, idx);
-      }
-    }
+  for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
+    springs.push(
+      new Spring(0.01, 200, nodes.get(edge[0])!, nodes.get(edge[1])!)
+    );
   }
-  dfs(graph.options.startingIndex, null);
 }
