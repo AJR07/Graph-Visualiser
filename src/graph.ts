@@ -1,8 +1,8 @@
 import Pair from "./pair";
 import PARSERS from "./parsers";
-// "typedef" for adjacency list
-// The pair is Pair(node, weight)
-export type AdjList = Map<number, Pair<number, number>[]>;
+
+export type AdjList = Map<number, Pair<number, number>[]>; // from => (to, weight)
+export type EdgeList = [number, number, number][]; // [from, to, weight]
 
 export enum GraphType {
   AdjList = "AdjList",
@@ -39,10 +39,30 @@ export default class Graph {
   static parseGraph(str: string, options: GraphOptions): Graph {
     return PARSERS[options.type](str, options);
   }
+
+  static adjlistToEdgelist(adjlist: AdjList): EdgeList {
+    const edgeList: EdgeList = [];
+
+    for (const [from, edges] of adjlist) {
+      for (const edge of edges) {
+        if (
+          edgeList.filter(
+            (v) =>
+              (from == v[0] && edge.first == v[1] && edge.second == v[2]) ||
+              (edge.first == v[0] && from == v[1] && edge.second == v[2])
+          ).length != 0
+        ) {
+          continue;
+        }
+
+        edgeList.push([from, edge.first, edge.second]);
+      }
+    }
+
+    return edgeList;
+  }
 }
 
-// These are the default graph that's shown when the user first comes on
-export const DEFAULT_GRAPH = "1 2 1\n1 3 4\n2 6 3\n4 6 2\n5 6 3";
 export const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
   type: GraphType.EdgeList,
   bidirectional: true,
