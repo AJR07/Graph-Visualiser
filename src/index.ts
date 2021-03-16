@@ -24,6 +24,8 @@ let springs: Spring[] = [];
 // Queue of stuff for the update() method to handle
 const queue: Queue<(p: p5) => void> = new Queue();
 
+let currentlyDraggedNode: GraphNode | null = null;
+
 // The actual p5 instance that draws stuff
 new p5((p: p5) => {
   p.setup = () => {
@@ -123,6 +125,7 @@ new p5((p: p5) => {
     }
 
     // Add some random force to keep things interesting
+    /*
     for (const [, node] of nodes) {
       const force = p.createVector();
       const dir = p.noise(node.pos.x, node.pos.y);
@@ -130,6 +133,7 @@ new p5((p: p5) => {
       force.rotate(p.map(dir, 0, 1, 0, p.TWO_PI));
       node.vel.add(force);
     }
+    */
 
     // Force the nodes to be inside the screen
     // Basically we just clamp the position inside the screen lol
@@ -148,9 +152,31 @@ new p5((p: p5) => {
 
     // Update and draw all nodes
     for (const [, node] of nodes) {
-      node.update();
+      if (node != currentlyDraggedNode) node.update();
       node.show(p);
     }
+
+    // Draggable nodes
+    currentlyDraggedNode?.pos.set(p.mouseX, p.mouseY);
+    currentlyDraggedNode?.vel.set(0, 0);
+    currentlyDraggedNode?.acc.set(0, 0);
+  };
+
+  p.mouseDragged = () => {
+    for (const [, node] of nodes) {
+      if (p.dist(p.mouseX, p.mouseY, node.pos.x, node.pos.y) < node.size / 2) {
+        currentlyDraggedNode = node;
+        return;
+      }
+    }
+  };
+
+  p.mouseReleased = () => {
+    currentlyDraggedNode = null;
+  };
+
+  p.windowResized = () => {
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 });
 
