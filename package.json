@@ -12,6 +12,8 @@
     "test:lint": "eslint .",
     "test:format": "prettier --check .",
     "test:jest": "jest",
+    "prepare": "is-ci || husky install",
+    "postinstall": "is-ci || (husky install; npm run clear-webpack-cache)",
     "clear-webpack-cache": "rimraf node_modules/.cache/webpack"
   },
   "repository": {
