@@ -1,5 +1,5 @@
-import Pair from "./pair";
 import PARSERS from "./parsers";
+import Pair from "./pair";
 // "typedef" for adjacency list
 // The pair is Pair(node, weight)
 export type AdjList = Map<number, Pair<number, number>[]>;
