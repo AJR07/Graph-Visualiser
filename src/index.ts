@@ -5,7 +5,7 @@ import "../style.css";
 import clamp from "./clamp";
 import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
 import GraphNode from "./node";
-import Spring from "./spring";
+import Edge from "./spring";
 
 const EPSILON = 0.0001;
 
@@ -19,7 +19,7 @@ console.log(graph.adjlist);
 // Where the key is the idx of the node
 let nodes: Map<number, GraphNode> = new Map();
 // Springs control the spring forces between the nodes
-let springs: Spring[] = [];
+let springs: Edge[] = [];
 
 // Queue of stuff for the update() method to handle
 const queue: Queue<(p: p5) => void> = new Queue();
@@ -216,7 +216,7 @@ function updateSprings() {
 
   for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
     springs.push(
-      new Spring(0.01, 200, nodes.get(edge[0])!, nodes.get(edge[1])!)
+      new Edge(0.01, 200, edge[2], nodes.get(edge[0])!, nodes.get(edge[1])!)
     );
   }
 }
