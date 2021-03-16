@@ -28,7 +28,8 @@
   },
   "homepage": "https://github.com/AJR07/Graph-Drawer",
   "dependencies": {
-    "p5": "^1.2.0"
+    "p5": "^1.2.0",
+    "vue": "^2.6.12"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
