@@ -1,11 +1,24 @@
 import p5 from "p5";
 import "../style.css";
+//import Vue from "vue";
+import Queue from "./queue";
 import clamp from "./clamp";
 import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
 import GraphNode from "./node";
 import Spring from "./spring";
 
 const EPSILON = 0.0001;
+
+// The stuff to be drawn
+// Nodes are graph nodes and are just circles
+// Its stored in a Map (similar to c++ map)
+// Where the key is the idx of the node
+let nodes: Map<number, GraphNode> = new Map();
+// Springs control the spring forces between the nodes
+let springs: Spring[] = [];
+
+// Queue of stuff for the update() method to handle
+const queue: Queue<(p: p5) => void> = new Queue();
 
 // Internal representation of graph will always be adjacency list
 const graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
@@ -25,6 +38,9 @@ new p5((p: p5) => {
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
+
+    updateNodes(p);
+    updateSprings();
 
     // Create nodes based on graph representation
     for (const [key] of graph.adjlist) {
@@ -60,7 +76,11 @@ new p5((p: p5) => {
 
   p.draw = () => {
     p.background(0);
-
+    let task = queue.pop();
+    while (task) {
+      task(p);
+      task = queue.pop();
+    }
     // REPULSION OF NODES
     // For every node...
     for (const [, node] of nodes) {
@@ -188,3 +208,45 @@ new p5((p: p5) => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 });
+
+/*
+var app = new Vue({
+  el: "#vue-app",
+  data() {
+    return {
+      graphText: DEFAULT_GRAPH,
+      graphOptions: DEFAULT_GRAPH_OPTIONS,
+    };
+  },
+  methods: {
+    updateGraph() {
+      console.log("updating graph");
+      queue.push((p: p5) => {
+        graph = Graph.parseGraph(this.graphText, this.graphOptions);
+        updateNodes(p);
+        updateSprings();
+      });
+    },
+  },
+});
+*/
+function updateNodes(p: p5) {
+  nodes = new Map();
+
+  for (const [key] of graph.adjlist) {
+    nodes.set(
+      key,
+      new GraphNode(p, key, p.random(p.width), p.random(p.height))
+    );
+  }
+}
+
+function updateSprings() {
+  springs = [];
+
+  for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
+    springs.push(
+      new Spring(0.01, 200, nodes.get(edge[0])!, nodes.get(edge[1])!)
+    );
+  }
+}
