@@ -1,6 +1,4 @@
 import p5 from "p5";
-import Vue from "vue";
-import Queue from "../queue";
 import "../style.css";
 import clamp from "./clamp";
 import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
@@ -10,45 +8,58 @@ import Spring from "./spring";
 const EPSILON = 0.0001;
 
 // Internal representation of graph will always be adjacency list
-let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
+const graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
 console.log(graph.adjlist);
-
-// The stuff to be drawn
-// Nodes are graph nodes and are just circles
-// Its stored in a Map (similar to c++ map)
-// Where the key is the idx of the node
-let nodes: Map<number, GraphNode> = new Map();
-// Springs control the spring forces between the nodes
-let springs: Spring[] = [];
-
-// Queue of stuff for the update() method to handle
-const queue: Queue<(p: p5) => void> = new Queue();
 
 // The actual p5 instance that draws stuff
 new p5((p: p5) => {
+  // The stuff to be drawn
+  // Nodes are graph nodes and are just circles
+  // Its stored in a Map (similar to c++ map)
+  // Where the key is the idx of the node
+  const nodes: Map<number, GraphNode> = new Map();
+  // Springs control the spring forces between the nodes
+  const springs: Spring[] = [];
+
+  let currentlyDraggedNode: GraphNode | null = null;
+
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
 
     // Create nodes based on graph representation
-    updateNodes(p);
+    for (const [key] of graph.adjlist) {
+      nodes.set(
+        key,
+        new GraphNode(p, key, p.random(p.width), p.random(p.height))
+      );
+    }
 
     // Create springs (dfs)
     // The idea is that when you dfs you visit every edge once
     // So you create a spring connecting the 2 nodes
     // Right now it doesn't deal with one-directional edges
     // Imma deal with that later
-    updateSprings();
+    const visited = new Set<number>();
+    function dfs(idx: number, previous: number | null) {
+      visited.add(idx);
+
+      if (previous) {
+        springs.push(
+          new Spring(0.01, 200, nodes.get(idx)!, nodes.get(previous)!)
+        );
+      }
+
+      for (const next of graph.adjlist.get(idx)!) {
+        if (!visited.has(next.first)) {
+          dfs(next.first, idx);
+        }
+      }
+    }
+    dfs(graph.options.startingIndex, null);
   };
 
   p.draw = () => {
     p.background(0);
-
-    // HANDLE EVENTS
-    let task = queue.pop();
-    while (task) {
-      task(p);
-      task = queue.pop();
-    }
 
     // REPULSION OF NODES
     // For every node...
@@ -98,12 +109,12 @@ new p5((p: p5) => {
           .add(v)
           .div(v.mag() * v.mag());
       };
- 
+
       repulseWall(0, node.pos.y); // left
       repulseWall(node.pos.x, 0); // top
       repulseWall(p.width, node.pos.y) // right
       repulseWall(node.pos.x, p.height); // bottom
- 
+
       node.applyForce(steering);
     }
     */
@@ -123,6 +134,7 @@ new p5((p: p5) => {
     }
 
     // Add some random force to keep things interesting
+    /*
     for (const [, node] of nodes) {
       const force = p.createVector();
       const dir = p.noise(node.pos.x, node.pos.y);
@@ -130,6 +142,7 @@ new p5((p: p5) => {
       force.rotate(p.map(dir, 0, 1, 0, p.TWO_PI));
       node.vel.add(force);
     }
+    */
 
     // Force the nodes to be inside the screen
     // Basically we just clamp the position inside the screen lol
@@ -148,49 +161,30 @@ new p5((p: p5) => {
 
     // Update and draw all nodes
     for (const [, node] of nodes) {
-      node.update();
+      if (node != currentlyDraggedNode) node.update();
       node.show(p);
     }
+
+    // Draggable nodes
+    currentlyDraggedNode?.pos.set(p.mouseX, p.mouseY);
+    currentlyDraggedNode?.vel.set(0, 0);
+    currentlyDraggedNode?.acc.set(0, 0);
+  };
+
+  p.mouseDragged = () => {
+    for (const [, node] of nodes) {
+      if (p.dist(p.mouseX, p.mouseY, node.pos.x, node.pos.y) < node.size / 2) {
+        currentlyDraggedNode = node;
+        return;
+      }
+    }
+  };
+
+  p.mouseReleased = () => {
+    currentlyDraggedNode = null;
+  };
+
+  p.windowResized = () => {
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 });
-
-new Vue({
-  el: "#vue-app",
-  data() {
-    return {
-      graphText: DEFAULT_GRAPH,
-      graphOptions: DEFAULT_GRAPH_OPTIONS,
-    };
-  },
-  methods: {
-    updateGraph() {
-      console.log("updating graph");
-      queue.push((p: p5) => {
-        graph = Graph.parseGraph(this.graphText, this.graphOptions);
-        updateNodes(p);
-        updateSprings();
-      });
-    },
-  },
-});
-
-function updateNodes(p: p5) {
-  nodes = new Map();
-
-  for (const [key] of graph.adjlist) {
-    nodes.set(
-      key,
-      new GraphNode(p, key, p.random(p.width), p.random(p.height))
-    );
-  }
-}
-
-function updateSprings() {
-  springs = [];
-
-  for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
-    springs.push(
-      new Spring(0.01, 200, nodes.get(edge[0])!, nodes.get(edge[1])!)
-    );
-  }
-}

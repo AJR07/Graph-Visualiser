@@ -4,13 +4,3 @@ body {
   padding: 0;
   overflow: hidden;
 }
-
-#vue-app {
-  padding: 10px;
-  border-radius: 5px;
-  background-color: yellow;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  margin-right: 90%;
-}
