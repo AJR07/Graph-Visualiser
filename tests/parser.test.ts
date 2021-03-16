@@ -2,18 +2,25 @@ import prettyFormat from "pretty-format";
 import Graph, { AdjList, GraphOptions, GraphType } from "../src/graph";
 import Pair from "../src/pair";
 
-function equalAdjlist(a: AdjList, b: AdjList): boolean {
-  if (a.size !== b.size) return false;
+function equalAdjlist(actual: AdjList, expected: AdjList): boolean {
+  const errMsg = `❌ Got: ${prettyFormat(actual)}, Expected: ${prettyFormat(
+    expected
+  )}`;
+
+  if (actual.size !== expected.size) {
+    console.error(errMsg);
+    return false;
+  }
 
   let testVal: Pair<number, number>[] | undefined = undefined;
-  for (const [key, val] of a) {
-    testVal = b.get(key);
+  for (const [key, val] of actual) {
+    testVal = expected.get(key);
 
     const test1 = testVal?.every((v1) => val.filter((v2) => v2.equals(v1)));
     const test2 = val.every((v1) => testVal?.filter((v2) => v2.equals(v1)));
 
-    if (!(test1 && test2) || (testVal === undefined && !b.has(key))) {
-      console.log(`❌ Got: ${prettyFormat(a)}, Expected: ${prettyFormat(b)}`);
+    if (!(test1 && test2) || (testVal === undefined && !expected.has(key))) {
+      console.error(errMsg);
       return false;
     }
   }
