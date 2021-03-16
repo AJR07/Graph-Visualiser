@@ -1,5 +1,4 @@
 import p5 from "p5";
-import "../style.css";
 import clamp from "./clamp";
 import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
 import GraphNode from "./node";
