@@ -31,6 +31,9 @@ module.exports = {
   ],
   resolve: {
     extensions: [".ts", ".js", ".html"],
+    alias: {
+      vue: "vue/dist/vue.esm.browser.js",
+    },
   },
   output: {
     filename: "bundle.js",
