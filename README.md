@@ -16,7 +16,6 @@
 
 ### Github Pages (Not set up yet)
 
-
 ### Supported Graph Types
 
 NOTE: All these are assuming bi-directional, the directed option should be pretty self explanatory
