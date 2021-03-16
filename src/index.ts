@@ -7,24 +7,10 @@ import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
 import GraphNode from "./node";
 import Spring from "./spring";
 
-// These are the default graph that's shown when the user first comes on
-const DEFAULT_GRAPH = `1 2 1
-1 3 5
-2 6 3
-4 6 2
-5 6 3
-5 2 1`;
-const DEFAULT_GRAPH_OPTIONS: GraphOptions = {
-  type: GraphType.EdgeList,
-  bidirectional: true,
-  weighted: true,
-  startingIndex: 1,
-};
-
 const EPSILON = 0.0001;
 
 // Internal representation of graph will always be adjacency list
-const graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
+let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
 console.log(graph.adjlist);
 
 // The stuff to be drawn
