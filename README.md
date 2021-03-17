@@ -1,20 +1,14 @@
 # Graph Visualization tool
 
-🚀 [https://ajr07.github.io/Graph-Visualiser/](https://ajr07.github.io/Graph-Visualiser/)
-
-## TODO
-
-- Support for multiple edges / self edges
-- Figure out what to do when graph is too big for screen:
-  - scale out OR
-  - ability pan around OR
-  - both
+🚀[Website](https://ajr07.github.io/Graph-Visualiser/)
 
 ## Documentation
 
 ### Supported Graph Types
 
 NOTE: All these are assuming bi-directional, the directed option should be pretty self explanatory
+
+---
 
 #### 1. Adjacency List
 
@@ -68,6 +62,8 @@ Format:
 </td>
 </tr>
 </table>
+
+---
 
 #### 2. Edge List
 
@@ -125,6 +121,8 @@ Format: For every line of input `[a] [b] [w]`, means that there is a edge connec
 </tr>
 </table>
 
+---
+
 #### 3. Adjacency Matrix
 
 Format: For every `i`th line, the `n`th number in that line (space separated) means there is a edge connecting node `i` to node `n`.
@@ -159,9 +157,11 @@ If the graph is bidirectional, the matrix should be symmetrical
 </tr>
 </table>
 
+---
+
 ## Dev instructions
 
-**Development**
+**Build and Run**
 
 ```
 npm install
@@ -174,8 +174,16 @@ npm run dev
 npm run build
 ```
 
-**Test**
+**To Test**
 
 ```
 npm test
 ```
+
+## TODO
+
+- Support for multiple edges / self edges
+- Figure out what to do when graph is too big for screen:
+  - scale out OR
+  - ability pan around OR
+  - both
