@@ -4,7 +4,6 @@
 
 ## TODO
 
-- Add support for Adjacency Matrix
 - Support for multiple edges / self edges
 - Figure out what to do when graph is too big for screen:
   - scale out OR
