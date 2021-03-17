@@ -36,7 +36,6 @@ function edgeListParser(str: string, options: GraphOptions): Graph {
   for (const line of str.split("\n")) {
     // A, B and weight as string
     const [aS, bS, wS] = line.split(" ");
-    if (!aS || !bS || !wS) continue;
 
     // We parse the string into int
     // TODO: Check for invalid input like not number, negatives, etc
@@ -46,6 +45,8 @@ function edgeListParser(str: string, options: GraphOptions): Graph {
 
     // If the node doesn't exist yet, create a empty array there
     if (!adjlist.has(a)) adjlist.set(a, []);
+    // Do the same for all referenced nodes
+    if (!adjlist.has(b)) adjlist.set(b, []);
     // We push the new node + weight into the adjacency list
     adjlist.get(a)?.push(new Pair(b, w));
 
@@ -57,6 +58,7 @@ function edgeListParser(str: string, options: GraphOptions): Graph {
   }
   return new Graph(adjlist, options);
 }
+
 const PARSERS: { [k in GraphType]: GraphParser } = {
   AdjList: adjlistParser,
   AdjMatrix: adjMatrixParser,

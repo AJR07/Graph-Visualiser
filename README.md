@@ -1,5 +1,7 @@
 # Graph Visualization tool
 
+🚀 [https://ajr07.github.io/Graph-Visualiser/](https://ajr07.github.io/Graph-Visualiser/)
+
 ## TODO
 
 - Add support for Adjacency Matrix
@@ -13,8 +15,6 @@
   - both
 
 ## Documentation
-
-### Github Pages (Not set up yet)
 
 ### Supported Graph Types
 
