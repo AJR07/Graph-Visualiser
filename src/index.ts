@@ -139,8 +139,8 @@ new p5((p: p5) => {
     // Basically we just clamp the position inside the screen lol
     for (const [, node] of nodes) {
       node.pos.set(
-        clamp(node.pos.x, node.size, p.width - node.size),
-        clamp(node.pos.y, node.size, p.height - node.size)
+        clamp(node.pos.x, GraphNode.SIZE, p.width - GraphNode.SIZE),
+        clamp(node.pos.y, GraphNode.SIZE, p.height - GraphNode.SIZE)
       );
     }
 
@@ -164,7 +164,10 @@ new p5((p: p5) => {
 
   p.mouseDragged = () => {
     for (const [, node] of nodes) {
-      if (p.dist(p.mouseX, p.mouseY, node.pos.x, node.pos.y) < node.size / 2) {
+      if (
+        p.dist(p.mouseX, p.mouseY, node.pos.x, node.pos.y) <
+        GraphNode.SIZE / 2
+      ) {
         currentlyDraggedNode = node;
         return;
       }
@@ -231,7 +234,8 @@ function updateSprings(p: p5) {
         minWeight,
         maxWeight,
         nodes.get(edge[0])!,
-        nodes.get(edge[1])!
+        nodes.get(edge[1])!,
+        graph.options.bidirectional
       )
     );
   }

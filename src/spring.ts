@@ -1,4 +1,5 @@
 import p5 from "p5";
+import GraphNode from "./node";
 
 export interface SpringObject {
   applyForce(force: p5.Vector): void;
@@ -15,6 +16,8 @@ export default class Edge {
   maxWeight: number;
   minWeight: number;
 
+  bidirectional: boolean;
+
   static MIN_LENGTH = 50;
   static MAX_LENGTH = 300;
   static MIN_WEIGHT = 1;
@@ -27,9 +30,11 @@ export default class Edge {
     minWeight: number,
     maxWeight: number,
     a: SpringObject,
-    b: SpringObject
+    b: SpringObject,
+    bidirectional: boolean
   ) {
     this.k = k;
+    this.bidirectional = bidirectional;
 
     // Higher weight == longer length
     this.restLength = 200;
@@ -57,19 +62,20 @@ export default class Edge {
   }
 
   show(p: p5): void {
+    const strokeWeight = p.map(
+      this.weight,
+      this.minWeight,
+      this.maxWeight,
+      Edge.MIN_WEIGHT,
+      Edge.MAX_WEIGHT
+    );
+
     // Line
-    p.strokeWeight(
-      p.map(
-        this.weight,
-        this.minWeight,
-        this.maxWeight,
-        Edge.MIN_WEIGHT,
-        Edge.MAX_WEIGHT
-      )
-      // 3
-    )
-      .stroke(255)
-      .line(this.a.pos.x, this.a.pos.y, this.b.pos.x, this.b.pos.y);
+    if (this.bidirectional) {
+      p.strokeWeight(strokeWeight);
+      p.stroke(255);
+      p.line(this.a.pos.x, this.a.pos.y, this.b.pos.x, this.b.pos.y);
+    }
 
     // Weight indicator
     const left = this.a.pos.x < this.b.pos.x ? this.a : this.b;
@@ -84,7 +90,25 @@ export default class Edge {
     p.push();
     p.translate(left.pos);
     p.rotate(v.heading());
-    p.text(`${this.weight}`, v.mag(), 15);
+    p.text(`${this.weight}`, v.mag(), 15 + strokeWeight / 2);
     p.pop();
+
+    // Arrow
+    if (!this.bidirectional) {
+      const aToB = p5.Vector.sub(this.b.pos, this.a.pos);
+      const arrowSize = 25;
+      const lineLength = aToB.mag() - arrowSize - GraphNode.SIZE / 2;
+
+      p.push();
+      p.translate(this.a.pos);
+      p.strokeWeight(strokeWeight);
+      p.stroke(255);
+      p.rotate(aToB.heading());
+      p.line(0, 0, lineLength, 0);
+      p.noStroke();
+      p.translate(lineLength, 0);
+      p.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+      p.pop();
+    }
   }
 }
