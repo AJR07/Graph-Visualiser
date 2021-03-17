@@ -28,7 +28,23 @@ function adjlistParser(str: string, options: GraphOptions): Graph {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function adjMatrixParser(str: string, options: GraphOptions): Graph {
-  throw new Error("Not implemented");
+  const adjlist = new Map();
+
+  for (const [i, line] of str.split("\n").entries()) {
+    for (const [j, numS] of line.trim().split(" ").entries()) {
+      const from = i + options.startingIndex;
+      const to = j + options.startingIndex;
+
+      if (!adjlist.get(from)) adjlist.set(from, []);
+      if (!adjlist.get(to)) adjlist.set(to, []);
+
+      const n = parseInt(numS.trim(), 10);
+
+      adjlist.get(from)?.push(new Pair(to, n));
+    }
+  }
+
+  return new Graph(adjlist, options);
 }
 
 function edgeListParser(str: string, options: GraphOptions): Graph {

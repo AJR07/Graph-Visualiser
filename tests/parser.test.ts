@@ -188,3 +188,30 @@ describe("Adjacency List", () => {
     ],
   ])(formatStr, testFn);
 });
+
+describe("Adjacency Matrix", () => {
+  test.each<[string, GraphOptions, AdjList]>([
+    [
+      `0 1 5 0 0 0
+1 0 0 0 0 3
+5 0 0 0 0 0
+0 0 0 0 0 2
+0 0 0 0 0 3
+0 3 0 2 3 0`,
+      {
+        type: GraphType.AdjMatrix,
+        bidirectional: true,
+        weighted: false,
+        startingIndex: 1,
+      },
+      new Map([
+        [1, [new Pair(2, 1), new Pair(3, 5)]],
+        [2, [new Pair(1, 1), new Pair(6, 3)]],
+        [3, [new Pair(1, 5)]],
+        [4, [new Pair(6, 2)]],
+        [5, [new Pair(6, 3)]],
+        [6, [new Pair(4, 2), new Pair(5, 3)]],
+      ]),
+    ],
+  ])(formatStr, testFn);
+});
