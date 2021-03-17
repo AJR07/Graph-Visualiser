@@ -17,6 +17,7 @@ export default class Edge {
   minWeight: number;
 
   bidirectional: boolean;
+  weighted: boolean;
 
   static MIN_LENGTH = 50;
   static MAX_LENGTH = 300;
@@ -31,10 +32,10 @@ export default class Edge {
     maxWeight: number,
     a: SpringObject,
     b: SpringObject,
-    bidirectional: boolean
+    bidirectional: boolean,
+    weighted: boolean
   ) {
     this.k = k;
-    this.bidirectional = bidirectional;
 
     // Higher weight == longer length
     this.restLength = 200;
@@ -51,6 +52,9 @@ export default class Edge {
 
     this.a = a;
     this.b = b;
+
+    this.bidirectional = bidirectional;
+    this.weighted = weighted;
   }
 
   update(): void {

@@ -235,7 +235,8 @@ function updateSprings(p: p5) {
         maxWeight,
         nodes.get(edge[0])!,
         nodes.get(edge[1])!,
-        graph.options.bidirectional
+        graph.options.bidirectional,
+        graph.options.weighted
       )
     );
   }
