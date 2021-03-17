@@ -5,7 +5,7 @@ import "../style.css";
 import clamp from "./clamp";
 import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
 import GraphNode from "./node";
-import Spring from "./spring";
+import Edge from "./spring";
 
 const EPSILON = 0.0001;
 
@@ -19,7 +19,7 @@ console.log(graph.adjlist);
 // Where the key is the idx of the node
 let nodes: Map<number, GraphNode> = new Map();
 // Springs control the spring forces between the nodes
-let springs: Spring[] = [];
+let springs: Edge[] = [];
 
 // Queue of stuff for the update() method to handle
 const queue: Queue<(p: p5) => void> = new Queue();
@@ -39,7 +39,7 @@ new p5((p: p5) => {
     // So you create a spring connecting the 2 nodes
     // Right now it doesn't deal with one-directional edges
     // Imma deal with that later
-    updateSprings();
+    updateSprings(p);
   };
 
   p.draw = () => {
@@ -139,8 +139,8 @@ new p5((p: p5) => {
     // Basically we just clamp the position inside the screen lol
     for (const [, node] of nodes) {
       node.pos.set(
-        clamp(node.pos.x, node.size, p.width - node.size),
-        clamp(node.pos.y, node.size, p.height - node.size)
+        clamp(node.pos.x, GraphNode.SIZE, p.width - GraphNode.SIZE),
+        clamp(node.pos.y, GraphNode.SIZE, p.height - GraphNode.SIZE)
       );
     }
 
@@ -164,7 +164,10 @@ new p5((p: p5) => {
 
   p.mouseDragged = () => {
     for (const [, node] of nodes) {
-      if (p.dist(p.mouseX, p.mouseY, node.pos.x, node.pos.y) < node.size / 2) {
+      if (
+        p.dist(p.mouseX, p.mouseY, node.pos.x, node.pos.y) <
+        GraphNode.SIZE / 2
+      ) {
         currentlyDraggedNode = node;
         return;
       }
@@ -194,7 +197,7 @@ new Vue({
       queue.push((p: p5) => {
         graph = Graph.parseGraph(this.graphText, this.graphOptions);
         updateNodes(p);
-        updateSprings();
+        updateSprings(p);
       });
     },
   },
@@ -211,12 +214,29 @@ function updateNodes(p: p5) {
   }
 }
 
-function updateSprings() {
+function updateSprings(p: p5) {
   springs = [];
+
+  let maxWeight = -Infinity;
+  let minWeight = Infinity;
+
+  for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
+    if (edge[2] > maxWeight) maxWeight = edge[2];
+    if (edge[2] < minWeight) minWeight = edge[2];
+  }
 
   for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
     springs.push(
-      new Spring(0.01, 200, nodes.get(edge[0])!, nodes.get(edge[1])!)
+      new Edge(
+        p,
+        0.01,
+        edge[2],
+        minWeight,
+        maxWeight,
+        nodes.get(edge[0])!,
+        nodes.get(edge[1])!,
+        graph.options.bidirectional
+      )
     );
   }
 }
