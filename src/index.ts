@@ -120,7 +120,7 @@ new p5((p: p5) => {
           // Subtract to get the steering (like above)
           .sub(node.vel)
           // Limit the force (like above)
-          .limit(GraphNode.MAX_FORCE / 2)
+          .limit(GraphNode.MAX_FORCE * 0.7)
       );
     }
 

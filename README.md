@@ -5,9 +5,6 @@
 ## TODO
 
 - Add support for Adjacency Matrix
-- Support for representing one-directional edges
-- Actually let the user paste in the graph they want to visualize
-- Support for unconnected nodes
 - Support for multiple edges / self edges
 - Figure out what to do when graph is too big for screen:
   - scale out OR
