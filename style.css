@@ -22,7 +22,7 @@ body {
   margin-right: 90%;
 }
 
-label{
+label {
   font-family: Monospace;
 
   /* Design */
@@ -31,7 +31,7 @@ label{
   border: 2px solid green;
 }
 
-p{
+p {
   font-family: Monospace;
   margin-left: 30%;
   margin-right: 30%;
