@@ -4,3 +4,41 @@ body {
   padding: 0;
   overflow: hidden;
 }
+
+#vue-app {
+  padding: 10px;
+
+  /* Design */
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.749);
+  -webkit-box-shadow: 0 0 20px white;
+  -moz-box-shadow: 0 0 20px white;
+  box-shadow: 0 0 20px yellow;
+
+  /* Positioning */
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  margin-right: 90%;
+}
+
+label {
+  font-family: Monospace;
+
+  /* Design */
+  padding: 1px;
+  background-color: yellow;
+  border: 2px solid green;
+}
+
+p {
+  font-family: Monospace;
+  margin-left: 30%;
+  margin-right: 30%;
+
+  /*Design*/
+  padding: 2px;
+  background-color: orange;
+  border: 5px solid yellow;
+  border-radius: 10px;
+}

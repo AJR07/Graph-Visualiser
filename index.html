@@ -3,16 +3,15 @@
   <head>
     <!-- <link rel="stylesheet" type="text/css" href="style.css" /> -->
     <meta charset="utf-8" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script defer src="bundle.js"></script>
   </head>
   <body>
     <main>
       <div id="vue-app">
+        <p>Settings:</p>
         <label for="bidirectional-checkbox"> Bi-directional: </label>
         <input
           type="checkbox"
-          @change="updateGraph"
           v-model="graphOptions.bidirectional"
           name="bidirectional-checkbox"
           id="bidirectional-checkbox"
@@ -23,7 +22,6 @@
           name="graphtype-select"
           id="graphtype-select"
           v-model="graphOptions.type"
-          @change="updateGraph"
         >
           <option value="AdjList">Adjacency List</option>
           <option value="EdgeList">Edge List</option>
@@ -36,7 +34,6 @@
           name="weighted-checkbox"
           id="weighted-checkbox"
           v-model="graphOptions.weighted"
-          @change="updateGraph"
         />
         <textarea
           name="graph-text"

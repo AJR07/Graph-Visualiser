@@ -41,6 +41,7 @@ const testFn = (
 
 describe("Edge List", () => {
   test.each<[string, GraphOptions, AdjList]>([
+    // Test weighted+bidirectional
     [
       "1 2 1\n1 3 5\n2 6 3\n4 6 2\n5 6 3",
       {
@@ -73,6 +74,78 @@ describe("Edge List", () => {
         [4, [new Pair(6, 2)]],
         [5, [new Pair(2, 1), new Pair(6, 3)]],
         [6, [new Pair(2, 3), new Pair(4, 2), new Pair(5, 3)]],
+      ]),
+    ],
+    // Test unweighted+bidirectional
+    [
+      "1 2\n1 3\n2 6\n4 6\n5 6\n5 2",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: true,
+        weighted: false,
+        startingIndex: 1,
+      },
+      new Map([
+        [1, [new Pair(2, 1), new Pair(3, 1)]],
+        [2, [new Pair(1, 1), new Pair(5, 1), new Pair(6, 1)]],
+        [3, [new Pair(1, 1)]],
+        [4, [new Pair(6, 1)]],
+        [5, [new Pair(2, 1), new Pair(6, 1)]],
+        [6, [new Pair(2, 1), new Pair(4, 1), new Pair(5, 1)]],
+      ]),
+    ],
+    // Test weighted+directed
+    [
+      "1 2 1\n1 3 5\n2 6 3\n4 6 2\n5 6 3\n5 2 1",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: false,
+        weighted: true,
+        startingIndex: 1,
+      },
+      new Map([
+        [1, [new Pair(2, 1), new Pair(3, 5)]],
+        [2, [new Pair(1, 1)]],
+        [3, []],
+        [4, [new Pair(6, 2)]],
+        [5, [new Pair(6, 3)]],
+        [6, []],
+      ]),
+    ],
+    // Test unweighted+directed
+    [
+      "1 2\n1 3\n2 6\n4 6\n5 6\n5 2",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: false,
+        weighted: false,
+        startingIndex: 1,
+      },
+      new Map([
+        [1, [new Pair(2, 1), new Pair(3, 1)]],
+        [2, [new Pair(1, 1)]],
+        [3, []],
+        [4, [new Pair(6, 1)]],
+        [5, [new Pair(6, 1)]],
+        [6, []],
+      ]),
+    ],
+    // Test different starting index
+    [
+      "0 1\n0 2\n1 5\n3 5\n3 5\n4 1",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: false,
+        weighted: false,
+        startingIndex: 0,
+      },
+      new Map([
+        [0, [new Pair(1, 1), new Pair(2, 1)]],
+        [1, [new Pair(0, 1)]],
+        [2, []],
+        [3, [new Pair(5, 1)]],
+        [4, [new Pair(5, 1)]],
+        [5, []],
       ]),
     ],
   ])(formatStr, testFn);
@@ -111,6 +184,33 @@ describe("Adjacency List", () => {
         [3, [new Pair(1, 1), new Pair(2, 1)]],
         [4, [new Pair(3, 1)]],
         [5, [new Pair(1, 1), new Pair(4, 1)]],
+      ]),
+    ],
+  ])(formatStr, testFn);
+});
+
+describe("Adjacency Matrix", () => {
+  test.each<[string, GraphOptions, AdjList]>([
+    [
+      `0 1 5 0 0 0
+1 0 0 0 0 3
+5 0 0 0 0 0
+0 0 0 0 0 2
+0 0 0 0 0 3
+0 3 0 2 3 0`,
+      {
+        type: GraphType.AdjMatrix,
+        bidirectional: true,
+        weighted: false,
+        startingIndex: 1,
+      },
+      new Map([
+        [1, [new Pair(2, 1), new Pair(3, 5)]],
+        [2, [new Pair(1, 1), new Pair(6, 3)]],
+        [3, [new Pair(1, 5)]],
+        [4, [new Pair(6, 2)]],
+        [5, [new Pair(6, 3)]],
+        [6, [new Pair(4, 2), new Pair(5, 3)]],
       ]),
     ],
   ])(formatStr, testFn);
