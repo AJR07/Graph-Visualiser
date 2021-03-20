@@ -42,3 +42,17 @@ p {
   border: 5px solid yellow;
   border-radius: 10px;
 }
+
+#Weight-Representation {
+  padding: 10px;
+  border-radius: 10px;
+  background: green;
+  -webkit-box-shadow: 0 0 20px green;
+  -moz-box-shadow: 0 0 20px green;
+}
+
+#special{
+  margin-left: 20%;
+  background-color: red;
+  border-radius: 2px;
+}

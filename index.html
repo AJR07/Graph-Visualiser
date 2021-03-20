@@ -9,18 +9,6 @@
     <main>
       <div id="vue-app">
         <p>Settings:</p>
-        <label for="Edge-length"> Edge Length: </label>
-        <input
-          type="range"
-          min="1"
-          max="500"
-          value="200"
-          name="Edge-length"
-          id="Edge-length"
-          v-model="restLength"
-        />
-
-        <br />
         <label for="bidirectional-checkbox"> Bi-directional: </label>
         <input
           type="checkbox"
@@ -40,13 +28,61 @@
           <option value="AdjMatrix">Adjacency Matrix</option>
         </select>
         <br />
-        <label for="weighted-checkbox">Weighted:</label>
-        <input
-          type="checkbox"
-          name="weighted-checkbox"
-          id="weighted-checkbox"
-          v-model="graphOptions.weighted"
-        />
+        <label for="Weight-Representation">Weight Representation</label>
+        <br />
+        <div id="Weight-Representation">
+          <label for="weighted-checkbox">Weighted:</label>
+          <input
+            type="checkbox"
+            name="weighted-checkbox"
+            id="weighted-checkbox"
+            v-model="graphOptions.weighted"
+          />
+          <br />
+          
+          <labeL id="special">Show Weight by:</labeL>
+
+          <br />
+          <label for="Thickness-checkbox">Thickness:</label>
+          <input
+            type="checkbox"
+            name="Thickness-checkbox"
+            v-model="showThickness"
+            id="Thickness-checkbox"
+          />
+          <br />
+          <label for="Thickness-Length">Default Thickness: </label>
+          <input
+            type="range"
+            min="1"
+            max="50"
+            value="10"
+            name="Thickness-Length"
+            id="Thickness-Length"
+            v-model="Thickness"
+          />
+          <br />
+          <label for="Length-checkbox">Length:</label>
+          <input
+            type="checkbox"
+            name="Length-checkbox"
+            v-model="showLength"
+            id="Length-checkbox"
+          />
+          <br />
+          <label for="Edge-length">Default Edge Length: </label>
+          <input
+            type="range"
+            min="1"
+            max="500"
+            value="200"
+            name="Edge-length"
+            id="Edge-length"
+            v-model="Length"
+          />
+          <br />
+        </div>
+        <label for="graph-text">Input:</label>
         <textarea
           name="graph-text"
           id="graph-text"
@@ -54,6 +90,7 @@
           rows="10"
           v-model="graphText"
         ></textarea>
+
         <button @click="updateGraph">Apply</button>
       </div>
     </main>

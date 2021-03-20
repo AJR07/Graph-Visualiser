@@ -189,17 +189,33 @@ new Vue({
     return {
       graphText: DEFAULT_GRAPH,
       graphOptions: DEFAULT_GRAPH_OPTIONS,
-      restLength: 200,
+      Length: 200,
+      showThickness: false,
+      Thickness: 10,
+      showLength: false,
     };
   },
   methods: {
     updateGraph() {
-      console.log("updating graph");
+      console.log("Updating graph");
       queue.push((p: p5) => {
         graph = Graph.parseGraph(this.graphText, this.graphOptions);
         updateNodes(p);
         updateSprings(p);
-        updateRestLength(this.restLength);
+        //update Rest Length
+        if (!this.showLength)
+          for (const spring of springs) {
+            spring.restLength = this.Length;
+          }
+        else {
+          for (const spring of springs) {
+            spring.restLength = spring.weight*this.Length/2; //allows the default length bar to still kinda affect it by multiplying it
+          }
+        }
+        
+        //update to show by thickness or not
+        Edge.showWeightbyStroke = this.showThickness;
+        if (!this.showThickness) Edge.constantThickness = this.Thickness;
       });
     },
   },
@@ -216,9 +232,9 @@ function updateNodes(p: p5) {
   }
 }
 
-function updateRestLength(newRestLength: number) {
+function updateRestLength(length: number) {
   for (const spring of springs) {
-    spring.restLength = newRestLength;
+    spring.restLength = spring.weight*length/2;
   }
 }
 
