@@ -11,6 +11,7 @@ import Edge from "./spring";
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
+
 const EPSILON = 0.0001;
 
 // Internal representation of graph will always be adjacency list

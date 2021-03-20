@@ -23,6 +23,7 @@ export default class Edge {
   static MAX_LENGTH = 300;
   static MIN_WEIGHT = 1;
   static MAX_WEIGHT = 10;
+
   static showWeightbyStroke = false;
   static constantThickness = 10;
 
