@@ -7,10 +7,9 @@ import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
 import GraphNode from "./node";
 import Edge from "./spring";
 
-
 //disable vue messages
-Vue.config.productionTip = false 
-Vue.config.devtools = false
+Vue.config.productionTip = false;
+Vue.config.devtools = false;
 
 const EPSILON = 0.0001;
 
