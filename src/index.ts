@@ -209,10 +209,10 @@ new Vue({
           }
         else {
           for (const spring of springs) {
-            spring.restLength = spring.weight*this.Length/2; //allows the default length bar to still kinda affect it by multiplying it
+            spring.restLength = (spring.weight * this.Length) / 2; //allows the default length bar to still kinda affect it by multiplying it
           }
         }
-        
+
         //update to show by thickness or not
         Edge.showWeightbyStroke = this.showThickness;
         if (!this.showThickness) Edge.constantThickness = this.Thickness;
@@ -234,7 +234,7 @@ function updateNodes(p: p5) {
 
 function updateRestLength(length: number) {
   for (const spring of springs) {
-    spring.restLength = spring.weight*length/2;
+    spring.restLength = (spring.weight * length) / 2;
   }
 }
 

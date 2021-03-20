@@ -5,6 +5,7 @@
 ## Documentation
 
 ---
+
 ### Supported Graph Types
 
 NOTE: All these are assuming bi-directional, the directed option should be pretty self explanatory
@@ -159,11 +160,11 @@ If the graph is bidirectional, the matrix should be symmetrical
 ---
 
 ### Weight Representation
+
 1. **Thickness**: If checked, this displays the weight of the graph through the thickness of the edges
 2. **Default Thickness**: This slider value affects the thickness of the edges when the "thickness" checkbox is unchecked
 3. **Length**: If checked, this allows the weight of the edges to be represented by the length of the edges (or more specifically, the Rest Length)
 4. **Default Length**: This will affect the Length of the graph edges (if the Length checkbox is unchecked, this will directly affect the length of each edge, otherwise, this will be a multiplier to the weight for exaggeration of the weights)
-
 
 ---
 

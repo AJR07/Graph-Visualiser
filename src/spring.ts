@@ -56,7 +56,7 @@ export default class Edge {
     this.b = b;
 
     this.bidirectional = bidirectional;
-    this.weighted = weighted
+    this.weighted = weighted;
   }
 
   update(): void {
