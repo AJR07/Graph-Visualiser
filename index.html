@@ -28,6 +28,15 @@
           <option value="AdjMatrix">Adjacency Matrix</option>
         </select>
         <br />
+        <label for="graph-text">Input:</label>
+        <textarea
+          name="graph-text"
+          id="graph-text"
+          cols="30"
+          rows="10"
+          v-model="graphText"
+        ></textarea>
+        
         <label for="Weight-Representation">Weight Representation</label>
         <br />
         <div id="Weight-Representation">
@@ -59,7 +68,7 @@
             value="10"
             name="Thickness-Length"
             id="Thickness-Length"
-            v-model="Thickness"
+            v-model="thickness"
           />
           <br />
           <label for="Length-checkbox">Length:</label>
@@ -78,18 +87,10 @@
             value="200"
             name="Edge-length"
             id="Edge-length"
-            v-model="Length"
+            v-model="length"
           />
           <br />
         </div>
-        <label for="graph-text">Input:</label>
-        <textarea
-          name="graph-text"
-          id="graph-text"
-          cols="30"
-          rows="10"
-          v-model="graphText"
-        ></textarea>
 
         <button @click="updateGraph">Apply</button>
       </div>
