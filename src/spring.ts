@@ -24,6 +24,9 @@ export default class Edge {
   static MIN_WEIGHT = 1;
   static MAX_WEIGHT = 10;
 
+  static showWeightbyStroke = false;
+  static constantThickness = 10;
+
   constructor(
     p: p5,
     k: number,
@@ -76,7 +79,8 @@ export default class Edge {
 
     // Line
     if (this.bidirectional) {
-      p.strokeWeight(strokeWeight);
+      if (Edge.showWeightbyStroke) p.strokeWeight(strokeWeight);
+      else p.strokeWeight(Edge.constantThickness);
       p.stroke(255);
       p.line(this.a.pos.x, this.a.pos.y, this.b.pos.x, this.b.pos.y);
     }

@@ -7,6 +7,11 @@ import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
 import GraphNode from "./node";
 import Edge from "./spring";
 
+//disable vue messages
+Vue.config.productionTip = false;
+Vue.config.devtools = false;
+
+
 const EPSILON = 0.0001;
 
 // Internal representation of graph will always be adjacency list
@@ -189,15 +194,33 @@ new Vue({
     return {
       graphText: DEFAULT_GRAPH,
       graphOptions: DEFAULT_GRAPH_OPTIONS,
+      length: 200,
+      showThickness: false,
+      thickness: 10,
+      showLength: false,
     };
   },
   methods: {
     updateGraph() {
-      console.log("updating graph");
+      console.log("Updating graph");
       queue.push((p: p5) => {
         graph = Graph.parseGraph(this.graphText, this.graphOptions);
         updateNodes(p);
         updateSprings(p);
+        //update Rest Length
+        if (!this.showLength)
+          for (const spring of springs) {
+            spring.restLength = this.length;
+          }
+        else {
+          for (const spring of springs) {
+            spring.restLength = (spring.weight * this.length) / 2; //allows the default length bar to still kinda affect it by multiplying it
+          }
+        }
+
+        //update to show by thickness or not
+        Edge.showWeightbyStroke = this.showThickness;
+        if (!this.showThickness) Edge.constantThickness = this.thickness;
       });
     },
   },
@@ -211,6 +234,12 @@ function updateNodes(p: p5) {
       key,
       new GraphNode(p, key, p.random(p.width), p.random(p.height))
     );
+  }
+}
+
+function updateRestLength(length: number) {
+  for (const spring of springs) {
+    spring.restLength = (spring.weight * length) / 2;
   }
 }
 
