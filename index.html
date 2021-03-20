@@ -9,6 +9,18 @@
     <main>
       <div id="vue-app">
         <p>Settings:</p>
+        <label for="Edge-length"> Edge Length: </label>
+        <input
+          type="range"
+          min="1"
+          max="500"
+          value="200"
+          name="Edge-length"
+          id="Edge-length"
+          v-model="restLength"
+        />
+
+        <br />
         <label for="bidirectional-checkbox"> Bi-directional: </label>
         <input
           type="checkbox"

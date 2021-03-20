@@ -189,6 +189,7 @@ new Vue({
     return {
       graphText: DEFAULT_GRAPH,
       graphOptions: DEFAULT_GRAPH_OPTIONS,
+      restLength: 200,
     };
   },
   methods: {
@@ -198,6 +199,7 @@ new Vue({
         graph = Graph.parseGraph(this.graphText, this.graphOptions);
         updateNodes(p);
         updateSprings(p);
+        updateRestLength(this.restLength);
       });
     },
   },
@@ -211,6 +213,12 @@ function updateNodes(p: p5) {
       key,
       new GraphNode(p, key, p.random(p.width), p.random(p.height))
     );
+  }
+}
+
+function updateRestLength(newRestLength: number) {
+  for (const spring of springs) {
+    spring.restLength = newRestLength;
   }
 }
 
