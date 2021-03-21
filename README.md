@@ -4,7 +4,6 @@
 
 ## Documentation
 
-
 ---
 
 ### Supported Graph Types

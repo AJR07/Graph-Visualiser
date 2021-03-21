@@ -11,7 +11,6 @@ import Edge from "./spring";
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
-
 const EPSILON = 0.0001;
 
 // Internal representation of graph will always be adjacency list
@@ -234,12 +233,6 @@ function updateNodes(p: p5) {
       key,
       new GraphNode(p, key, p.random(p.width), p.random(p.height))
     );
-  }
-}
-
-function updateRestLength(length: number) {
-  for (const spring of springs) {
-    spring.restLength = (spring.weight * length) / 2;
   }
 }
 
