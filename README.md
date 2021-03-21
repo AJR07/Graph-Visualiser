@@ -4,15 +4,11 @@
 
 ## Documentation
 
----
 
 ### Supported Graph Types
 
+### 1. Adjacency List
 NOTE: All these are assuming bi-directional, the directed option should be pretty self explanatory
-
----
-
-#### 1. Adjacency List
 
 **Options**  
 The `bidirectional` option doesn't apply here
@@ -65,9 +61,10 @@ Format:
 </tr>
 </table>
 
----
+### 2. Edge List
 
-#### 2. Edge List
+**Options**  
+The `startingIndex` option doesn't apply here
 
 **Unweighted**  
 Format: For every line of input `[a] [b]`, means there is a edge connecting node `a` to node `b`.
@@ -123,9 +120,7 @@ Format: For every line of input `[a] [b] [w]`, means that there is a edge connec
 </tr>
 </table>
 
----
-
-#### 3. Adjacency Matrix
+### 3. Adjacency Matrix
 
 Format: For every `i`th line, the `n`th number in that line (space separated) means there is a edge connecting node `i` to node `n`.
 If the graph is weighted, then the weight of the edge connecting node `i` to node `n` is the `n`th number at the `i`th row.
@@ -159,7 +154,6 @@ If the graph is bidirectional, the matrix should be symmetrical
 </tr>
 </table>
 
----
 
 ### Weight Representation
 

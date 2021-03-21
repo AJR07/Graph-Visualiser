@@ -2,10 +2,18 @@ import prettyFormat from "pretty-format";
 import Graph, { AdjList, GraphOptions, GraphType } from "../src/graph";
 import Pair from "../src/pair";
 
-function equalAdjlist(actual: AdjList, expected: AdjList): boolean {
+function equalAdjlist(
+  actual: AdjList | null | undefined,
+  expected: AdjList
+): boolean {
   const errMsg = `❌ Got: ${prettyFormat(actual)}, Expected: ${prettyFormat(
     expected
   )}`;
+
+  if (!actual) {
+    console.error(errMsg);
+    return false;
+  }
 
   if (actual.size !== expected.size) {
     console.error(errMsg);
@@ -35,8 +43,11 @@ const testFn = (
   expected: AdjList
 ) => {
   expect(
-    equalAdjlist(Graph.parseGraph(graphStr, graphOptions).adjlist, expected)
+    equalAdjlist(Graph.parseGraph(graphStr, graphOptions)?.adjlist, expected)
   ).toBe(true);
+};
+const negativeTestFn = (str: string, options: GraphOptions) => {
+  expect(Graph.parseGraph(str, options)).toBeNull();
 };
 
 describe("Edge List", () => {
@@ -148,7 +159,55 @@ describe("Edge List", () => {
         [5, []],
       ]),
     ],
-  ])(formatStr, testFn);
+  ])("Positive test:\n" + formatStr, testFn);
+
+  test.each<[string, GraphOptions]>([
+    [
+      "",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: false,
+        weighted: false,
+        startingIndex: 0,
+      },
+    ],
+    [
+      "abc def",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: false,
+        weighted: false,
+        startingIndex: 0,
+      },
+    ],
+    [
+      "-1 -10 2",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: true,
+        weighted: true,
+        startingIndex: 0,
+      },
+    ],
+    [
+      "0 1 2 1\n1 2 34 1",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: true,
+        weighted: true,
+        startingIndex: 1,
+      },
+    ],
+    [
+      "1 2 1\n1 3 4qwerty",
+      {
+        type: GraphType.EdgeList,
+        bidirectional: true,
+        weighted: true,
+        startingIndex: 1,
+      },
+    ],
+  ])("Negative test:\n" + formatStr, negativeTestFn);
 });
 
 describe("Adjacency List", () => {
@@ -186,18 +245,18 @@ describe("Adjacency List", () => {
         [5, [new Pair(1, 1), new Pair(4, 1)]],
       ]),
     ],
-  ])(formatStr, testFn);
+  ])("Positive test:\n" + formatStr, testFn);
 });
 
 describe("Adjacency Matrix", () => {
   test.each<[string, GraphOptions, AdjList]>([
     [
-      `0 1 5 0 0 0
-1 0 0 0 0 3
-5 0 0 0 0 0
-0 0 0 0 0 2
-0 0 0 0 0 3
-0 3 0 2 3 0`,
+      "0 1 5 0 0 0\n \
+       1 0 0 0 0 3\n \
+       5 0 0 0 0 0\n \
+       0 0 0 0 0 2\n \
+       0 0 0 0 0 3\n \
+       0 3 0 2 3 0",
       {
         type: GraphType.AdjMatrix,
         bidirectional: true,
@@ -213,5 +272,5 @@ describe("Adjacency Matrix", () => {
         [6, [new Pair(4, 2), new Pair(5, 3)]],
       ]),
     ],
-  ])(formatStr, testFn);
+  ])("Positive test:\n" + formatStr, testFn);
 });
