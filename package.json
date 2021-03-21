@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/AJR07/Graph-Drawer",
   "dependencies": {
+    "i": "^0.3.6",
     "lodash.debounce": "^4.0.8",
     "p5": "^1.2.0",
     "vue": "^2.6.12"
