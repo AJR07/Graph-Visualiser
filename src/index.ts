@@ -209,10 +209,20 @@ new Vue<VueData, { updateGraph(): void }, object, never>({
   },
   watch: {
     edgeDisplayOptions: {
-      handler: function () {
+      handler: function (
+        newValue: EdgeDisplayOptions,
+        prevValue: EdgeDisplayOptions
+      ) {
         console.log("edgeDisplayOptions changed");
         Edge.displayOptions = this.edgeDisplayOptions;
-        this.debouncedUpdateGraph();
+        if (
+          newValue.length != prevValue.length ||
+          newValue.thickness != newValue.thickness
+        ) {
+          this.debouncedUpdateGraph();
+        } else {
+          this.updateGraph();
+        }
       },
       deep: true,
     },
