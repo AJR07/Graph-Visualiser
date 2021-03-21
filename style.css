@@ -3,9 +3,27 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+
+h2 {
+  margin: 10px 0px;
+  text-decoration: underline;
 }
 
 #vue-app {
+  /* Positioning */
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  margin-right: 90%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.side-container {
   padding: 10px;
 
   /* Design */
@@ -13,46 +31,5 @@ body {
   background-color: rgba(255, 255, 255, 0.749);
   -webkit-box-shadow: 0 0 20px white;
   -moz-box-shadow: 0 0 20px white;
-  box-shadow: 0 0 20px yellow;
-
-  /* Positioning */
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  margin-right: 90%;
-}
-
-label {
-  font-family: Monospace;
-
-  /* Design */
-  padding: 1px;
-  background-color: yellow;
-  border: 2px solid green;
-}
-
-p {
-  font-family: Monospace;
-  margin-left: 30%;
-  margin-right: 30%;
-
-  /*Design*/
-  padding: 2px;
-  background-color: orange;
-  border: 5px solid yellow;
-  border-radius: 10px;
-}
-
-#Weight-Representation {
-  padding: 10px;
-  border-radius: 10px;
-  background: green;
-  -webkit-box-shadow: 0 0 20px green;
-  -moz-box-shadow: 0 0 20px green;
-}
-
-#special {
-  margin-left: 20%;
-  background-color: red;
-  border-radius: 2px;
+  box-shadow: 0 0 20px white;
 }
