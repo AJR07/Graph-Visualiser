@@ -68,6 +68,8 @@ function adjMatrixParser(str: string, options: GraphOptions): Graph | null {
       if (!isNumber(numS)) return null;
       const n = parseInt(numS.trim(), 10);
 
+      if (n == 0) continue;
+
       if (isNaN(n)) return null;
 
       adjlist.get(from)?.push(new Pair(to, n));

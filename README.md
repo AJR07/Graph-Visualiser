@@ -4,10 +4,10 @@
 
 ## Documentation
 
-
 ### Supported Graph Types
 
 ### 1. Adjacency List
+
 NOTE: All these are assuming bi-directional, the directed option should be pretty self explanatory
 
 **Options**  
@@ -126,7 +126,7 @@ Format: For every `i`th line, the `n`th number in that line (space separated) me
 If the graph is weighted, then the weight of the edge connecting node `i` to node `n` is the `n`th number at the `i`th row.
 
 **Options**  
-The `bidirectional` option doesn't apply here.
+Both the `bidirectional` and the `weighted` options doesn't apply here.
 If the graph is bidirectional, the matrix should be symmetrical
 
 <table>
@@ -153,7 +153,6 @@ If the graph is bidirectional, the matrix should be symmetrical
 </td>
 </tr>
 </table>
-
 
 ### Weight Representation
 

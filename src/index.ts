@@ -200,6 +200,13 @@ new p5((p: p5) => {
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
+
+  // for debugging
+  if (process.env.NODE_ENV == "development") {
+    p.keyPressed = () => {
+      console.log(graph);
+    };
+  }
 });
 
 interface VueData {
