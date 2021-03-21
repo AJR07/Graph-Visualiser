@@ -292,17 +292,16 @@ function updateSprings(p: p5) {
   }
 }
 
-
-
 new Vue({
   el: "#hide-show",
   data: {
     hidden: false,
   },
   methods: {
-    hideShow: function() {
-      if (this.hidden) document.getElementById("vue-app")?.style.display = "flex";
+    hideShow: function () {
+      if (this.hidden)
+        document.getElementById("vue-app")?.style.display = "flex";
       else document.getElementById("vue-app")?.style.display;
-    }
-  }
-})
+    },
+  },
+});
