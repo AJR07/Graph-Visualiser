@@ -204,7 +204,9 @@ new p5((p: p5) => {
   // for debugging
   if (process.env.NODE_ENV == "development") {
     p.keyPressed = () => {
-      console.log(graph);
+      if (p.key == "x") {
+        console.log(graph);
+      }
     };
   }
 });
@@ -313,8 +315,7 @@ function updateSprings(p: p5) {
         maxWeight,
         nodes.get(edge[0])!,
         nodes.get(edge[1])!,
-        graph.options.bidirectional,
-        graph.options.weighted
+        graph.options
       )
     );
   }

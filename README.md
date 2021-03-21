@@ -183,7 +183,14 @@ npm test
 ```
 
 ## TODO
+**Actual stuff**
+- ! Ability to draw arrows both ways
+- UI for options.startingIndex
+- Dim the options UI for when the particular graph type doesn't use it
+- Show/Hide menus
+- Help/Documentation box
 
+**Potential Features**
 - Support for multiple edges / self edges
 - Figure out what to do when graph is too big for screen:
   - scale out OR

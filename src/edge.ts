@@ -1,4 +1,5 @@
 import p5 from "p5";
+import { GraphOptions, GraphType } from "./graph";
 import GraphNode from "./node";
 
 export interface SpringObject {
@@ -30,8 +31,10 @@ export default class Edge {
   maxWeight: number;
   minWeight: number;
 
-  bidirectional: boolean;
-  weighted: boolean;
+  // bidirectional: boolean;
+  // weighted: boolean;
+  // graphType: GraphType;
+  graphOptions: GraphOptions;
 
   static MIN_LENGTH = 50;
   static MAX_LENGTH = 300;
@@ -48,8 +51,10 @@ export default class Edge {
     maxWeight: number,
     a: SpringObject,
     b: SpringObject,
-    bidirectional: boolean,
-    weighted: boolean
+    // bidirectional: boolean,
+    // weighted: boolean,
+    // graphType: GraphType
+    graphOptions: GraphOptions
   ) {
     this.k = k;
 
@@ -69,8 +74,10 @@ export default class Edge {
     this.a = a;
     this.b = b;
 
-    this.bidirectional = bidirectional;
-    this.weighted = weighted;
+    // this.bidirectional = bidirectional;
+    // this.weighted = weighted;
+    // this.graphType = graphType;
+    this.graphOptions = graphOptions;
   }
 
   update(): void {
@@ -90,8 +97,13 @@ export default class Edge {
       Edge.MAX_WEIGHT
     );
 
+    const shouldDrawArrows = !(
+      this.graphOptions.type == GraphType.EdgeList &&
+      this.graphOptions.bidirectional
+    );
+
     // Line
-    if (this.bidirectional) {
+    if (!shouldDrawArrows) {
       if (Edge.displayOptions.showThickness) p.strokeWeight(strokeWeight);
       else p.strokeWeight(Edge.displayOptions.thickness);
       p.stroke(255);
@@ -115,7 +127,7 @@ export default class Edge {
     p.pop();
 
     // Arrow
-    if (!this.bidirectional) {
+    if (shouldDrawArrows) {
       const aToB = p5.Vector.sub(this.b.pos, this.a.pos);
       const arrowSize = 25;
       const lineLength = aToB.mag() - arrowSize - GraphNode.SIZE / 2;

@@ -20,31 +20,37 @@ function adjlistParser(str: string, options: GraphOptions): Graph | null {
 
     if (options.weighted) {
       const spaceSeparated = line.split(" ");
+      if (spaceSeparated.length % 2 != 0) return null;
+
       for (let i = 0; i < spaceSeparated.length - 1; i += 2) {
         if (!(isNumber(spaceSeparated[i]) && isNumber(spaceSeparated[i + 1])))
           return null;
 
-        const to = parseInt(spaceSeparated[i], 10) + options.startingIndex;
+        const to = parseInt(spaceSeparated[i], 10);
         const weight = parseInt(spaceSeparated[i + 1], 10);
 
         if (isNaN(to) || isNaN(weight)) return null;
         if (to < 0) return null;
 
+        if (!adjlist.get(to)) adjlist.set(to, []);
         adjlist.get(from)?.push(new Pair(to, weight));
       }
     } else {
       for (const toS of line.split(" ")) {
         if (!isNumber(toS)) return null;
 
-        const to = parseInt(toS, 10) + options.startingIndex;
+        const to = parseInt(toS, 10);
 
         if (isNaN(to)) return null;
         if (to < 0) return null;
 
+        if (!adjlist.get(to)) adjlist.set(to, []);
         adjlist.get(from)?.push(new Pair(to, 1));
       }
     }
   }
+  console.log("adjlist parser result", adjlist);
+
   return new Graph(adjlist, options);
 }
 
@@ -86,6 +92,8 @@ function edgeListParser(str: string, options: GraphOptions): Graph | null {
   for (const line of str.split("\n")) {
     // A, B and weight as string
     const [aS, bS, wS, ...remaining] = line.split(" ");
+
+    if (!options.weighted && wS) return null;
 
     if (remaining.length > 0) return null;
     if (!(isNumber(aS) && isNumber(bS))) return null;
