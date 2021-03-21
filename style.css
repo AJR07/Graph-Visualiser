@@ -12,6 +12,11 @@ h2 {
   text-decoration: underline;
 }
 
+fieldset {
+  margin: 5px;
+  border: 1px dashed black;
+}
+
 #vue-app {
   /* Positioning */
   position: absolute;
@@ -26,10 +31,14 @@ h2 {
 .side-container {
   padding: 10px;
 
-  /* Design */
+  /* Design*/
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.749);
-  -webkit-box-shadow: 0 0 20px white;
-  -moz-box-shadow: 0 0 20px white;
   box-shadow: 0 0 20px white;
+  border-radius: 5px;
+}
+
+.dimmed {
+  filter: opacity(20%);
+  -webkit-filter: opacity(20%);
 }

@@ -53,42 +53,55 @@
 
         <div class="side-container" style="margin-top: 30px">
           <h2>Display</h2>
-          <label for="thickness-checkbox">Thickness:</label>
-          <input
-            type="checkbox"
-            v-model="showThickness"
-            id="thickness-checkbox"
-          />
-          <br />
-          <label for="thickness-length">Default Thickness: </label>
-          <input
-            type="range"
-            min="1"
-            max="50"
-            value="10"
-            id="thickness-length"
-            v-model="thickness"
-          />
-          <br />
-          <label for="length-checkbox">Length:</label>
-          <input
-            type="checkbox"
-            name="length-checkbox"
-            v-model="showLength"
-            id="length-checkbox"
-          />
-          <br />
-          <label for="Edge-length">Default Edge Length: </label>
-          <input
-            type="range"
-            min="1"
-            max="500"
-            value="200"
-            name="edge-length"
-            id="edge-length"
-            v-model="length"
-          />
-          <br />
+          <fieldset>
+            <div>
+              <label for="thickness-checkbox">Thickness:</label>
+              <input
+                type="checkbox"
+                v-model="edgeDisplayOptions.showThickness"
+                id="thickness-checkbox"
+              />
+            </div>
+            <br />
+            <div :class="{ dimmed: edgeDisplayOptions.showThickness }">
+              <label for="thickness-length">Default Thickness: </label>
+              <input
+                type="range"
+                min="1"
+                max="50"
+                value="10"
+                id="thickness-length"
+                v-model="edgeDisplayOptions.thickness"
+                :disabled="edgeDisplayOptions.showThickness"
+              />
+            </div>
+            <br />
+          </fieldset>
+          <fieldset>
+            <div>
+              <label for="length-checkbox">Length:</label>
+              <input
+                type="checkbox"
+                name="length-checkbox"
+                v-model="edgeDisplayOptions.showLength"
+                id="length-checkbox"
+              />
+            </div>
+            <br />
+            <div :class="{ dimmed: edgeDisplayOptions.showLength }">
+              <label for="Edge-length">Default Edge Length: </label>
+              <input
+                type="range"
+                min="1"
+                max="500"
+                value="200"
+                name="edge-length"
+                id="edge-length"
+                v-model="edgeDisplayOptions.length"
+                :disabled="edgeDisplayOptions.showLength"
+              />
+            </div>
+          </fieldset>
         </div>
       </div>
     </main>

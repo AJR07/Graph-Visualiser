@@ -6,6 +6,20 @@ export interface SpringObject {
   pos: p5.Vector;
 }
 
+export interface EdgeDisplayOptions {
+  length: number;
+  showThickness: boolean;
+  thickness: number;
+  showLength: boolean;
+}
+
+export const DEFAULT_EDGE_DISPLAY_OPTIONS: EdgeDisplayOptions = {
+  length: 200,
+  showThickness: true,
+  thickness: 3,
+  showLength: false,
+};
+
 export default class Edge {
   k: number;
   restLength: number;
@@ -24,8 +38,7 @@ export default class Edge {
   static MIN_WEIGHT = 1;
   static MAX_WEIGHT = 10;
 
-  static showWeightbyStroke = false;
-  static constantThickness = 10;
+  static displayOptions: EdgeDisplayOptions = DEFAULT_EDGE_DISPLAY_OPTIONS;
 
   constructor(
     p: p5,
@@ -79,8 +92,8 @@ export default class Edge {
 
     // Line
     if (this.bidirectional) {
-      if (Edge.showWeightbyStroke) p.strokeWeight(strokeWeight);
-      else p.strokeWeight(Edge.constantThickness);
+      if (Edge.displayOptions.showThickness) p.strokeWeight(strokeWeight);
+      else p.strokeWeight(Edge.displayOptions.thickness);
       p.stroke(255);
       p.line(this.a.pos.x, this.a.pos.y, this.b.pos.x, this.b.pos.y);
     }

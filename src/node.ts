@@ -1,5 +1,5 @@
 import p5 from "p5";
-import { SpringObject } from "./spring";
+import { SpringObject } from "./edge";
 
 export default class GraphNode implements SpringObject {
   id: number;

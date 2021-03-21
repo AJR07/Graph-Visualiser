@@ -1,15 +1,16 @@
+import debounce from "lodash.debounce";
 import p5 from "p5";
 import Vue from "vue";
 import Queue from "../queue";
 import "../style.css";
 import clamp from "./clamp";
-import Graph, { DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS } from "./graph";
+import Edge, { DEFAULT_EDGE_DISPLAY_OPTIONS, EdgeDisplayOptions } from "./edge";
+import Graph, {
+  DEFAULT_GRAPH,
+  DEFAULT_GRAPH_OPTIONS,
+  GraphOptions,
+} from "./graph";
 import GraphNode from "./node";
-import Edge from "./spring";
-
-//disable vue messages
-Vue.config.productionTip = false;
-Vue.config.devtools = false;
 
 const EPSILON = 0.0001;
 
@@ -187,17 +188,37 @@ new p5((p: p5) => {
   };
 });
 
-new Vue({
+interface VueData {
+  graphText: string;
+  graphOptions: GraphOptions;
+  edgeDisplayOptions: EdgeDisplayOptions;
+  debouncedUpdateGraph: () => void;
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+new Vue<VueData, { updateGraph(): void }, object, never>({
   el: "#vue-app",
   data() {
     return {
       graphText: DEFAULT_GRAPH,
       graphOptions: DEFAULT_GRAPH_OPTIONS,
-      length: 200,
-      showThickness: false,
-      thickness: 10,
-      showLength: false,
+      edgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      debouncedUpdateGraph: () => {},
     };
+  },
+  watch: {
+    edgeDisplayOptions: {
+      handler: function () {
+        console.log("edgeDisplayOptions changed");
+        Edge.displayOptions = this.edgeDisplayOptions;
+        this.debouncedUpdateGraph();
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.debouncedUpdateGraph = debounce(this.updateGraph, 500);
   },
   methods: {
     updateGraph() {
@@ -207,19 +228,16 @@ new Vue({
         updateNodes(p);
         updateSprings(p);
         //update Rest Length
-        if (!this.showLength)
+        if (!this.edgeDisplayOptions.showLength)
           for (const spring of springs) {
-            spring.restLength = this.length;
+            spring.restLength = this.edgeDisplayOptions.length;
           }
         else {
           for (const spring of springs) {
-            spring.restLength = (spring.weight * this.length) / 2; //allows the default length bar to still kinda affect it by multiplying it
+            spring.restLength =
+              (spring.weight * this.edgeDisplayOptions.length) / 2; //allows the default length bar to still kinda affect it by multiplying it
           }
         }
-
-        //update to show by thickness or not
-        Edge.showWeightbyStroke = this.showThickness;
-        if (!this.showThickness) Edge.constantThickness = this.thickness;
       });
     },
   },
