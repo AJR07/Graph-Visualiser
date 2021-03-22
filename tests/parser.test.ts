@@ -245,6 +245,21 @@ describe("Adjacency List", () => {
         [5, [new Pair(1, 1), new Pair(4, 1)]],
       ]),
     ],
+    [
+      "2 3\n1 3\n4 1",
+      {
+        type: GraphType.AdjList,
+        bidirectional: true,
+        weighted: false,
+        startingIndex: 1,
+      },
+      new Map([
+        [1, [new Pair(2, 1), new Pair(3, 1)]],
+        [2, [new Pair(1, 1), new Pair(3, 1)]],
+        [3, [new Pair(1, 1), new Pair(4, 1)]],
+        [4, []],
+      ]),
+    ],
   ])("Positive test:\n" + formatStr, testFn);
 });
 
