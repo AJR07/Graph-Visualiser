@@ -40,11 +40,7 @@ new p5((p: p5) => {
     updateNodes(p);
 
     // Create springs (dfs)
-    // The idea is that when you dfs you visit every edge once
-    // So you create a spring connecting the 2 nodes
-    // Right now it doesn't deal with one-directional edges
-    // Imma deal with that later
-    updateSprings(p);
+    updateSprings();
   };
 
   p.draw = () => {
@@ -149,10 +145,72 @@ new p5((p: p5) => {
       );
     }
 
-    // Update and draw all springs
+    // Draw the edges
+    {
+      for (const [from, x] of graph.adjlist) {
+        for (const y of x) {
+          const to = y.first;
+          const weight = y.second;
+
+          const options: EdgeDisplayOptions = vm.$data.edgeDisplayOptions;
+
+          // console.log(`options.showThickness: ${options.showThickness}`);
+          // console.log(`options.thickness: ${options.thickness}`);
+
+          const strokeWeight = p.map(
+            weight,
+            graph.minWeight,
+            graph.maxWeight,
+            2,
+            10
+          );
+
+          const a = nodes.get(from)!;
+          const b = nodes.get(to)!;
+          const left = a.pos.x < b.pos.x ? a : b;
+          const right = a.pos.x < b.pos.x ? b : a;
+
+          p.push();
+
+          const v = p5.Vector.sub(right.pos, left.pos);
+          v.div(2);
+
+          p.noStroke();
+          p.fill(255);
+
+          p.push();
+          p.translate(left.pos);
+          p.rotate(v.heading());
+          p.text(`${weight}`, v.mag(), 15 + strokeWeight / 2);
+          p.pop();
+
+          // todo: change this to auto detect
+          const aToB = p5.Vector.sub(b.pos, a.pos);
+          const arrowSize = 25;
+          const lineLength = aToB.mag() - arrowSize - GraphNode.SIZE / 2;
+
+          p.push();
+          p.translate(a.pos);
+          p.strokeWeight(
+            options.showThickness ? strokeWeight : options.thickness
+          );
+          p.stroke(255);
+          p.rotate(aToB.heading());
+          p.line(0, 0, lineLength, 0);
+          p.noStroke();
+          if (graph.options.bidirectional) {
+            p.translate(lineLength + strokeWeight, 0);
+            p.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+          }
+          p.pop();
+        }
+      }
+    }
+
+    // Update all springs
     for (const spring of springs) {
       spring.update();
-      spring.show(p);
+      // spring.show(p);
     }
 
     // Update and draw all nodes
@@ -219,7 +277,7 @@ interface VueData {
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-new Vue<VueData, { updateGraph(): void }, object, never>({
+const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
   el: "#vue-app",
   data() {
     return {
@@ -237,7 +295,6 @@ new Vue<VueData, { updateGraph(): void }, object, never>({
         prevValue: EdgeDisplayOptions
       ) {
         console.log("edgeDisplayOptions changed");
-        Edge.displayOptions = this.edgeDisplayOptions;
         if (
           newValue.length != prevValue.length ||
           newValue.thickness != newValue.thickness
@@ -266,16 +323,39 @@ new Vue<VueData, { updateGraph(): void }, object, never>({
 
         graph = tmp;
         updateNodes(p);
-        updateSprings(p);
-        //update Rest Length
-        if (!this.edgeDisplayOptions.showLength)
+        updateSprings();
+
+        // Length
+        if (!this.edgeDisplayOptions.showLength) {
           for (const spring of springs) {
             spring.restLength = this.edgeDisplayOptions.length;
           }
-        else {
+        } else {
           for (const spring of springs) {
-            spring.restLength =
-              (spring.weight * this.edgeDisplayOptions.length) / 2; //allows the default length bar to still kinda affect it by multiplying it
+            let weight: number | null = null;
+
+            for (const edgePair of Graph.adjlistToEdgelist(graph.adjlist)) {
+              if (
+                (edgePair[0] == spring.a.id && edgePair[1] == spring.b.id) ||
+                (edgePair[1] == spring.a.id && edgePair[0] == spring.b.id)
+              ) {
+                weight = edgePair[2];
+                break;
+              }
+            }
+
+            if (!weight) {
+              console.error("Weight is null");
+              continue;
+            }
+
+            spring.restLength = p.map(
+              weight,
+              graph.minWeight,
+              graph.maxWeight,
+              100,
+              500
+            );
           }
         }
       });
@@ -294,29 +374,10 @@ function updateNodes(p: p5) {
   }
 }
 
-function updateSprings(p: p5) {
+function updateSprings() {
   springs = [];
 
-  let maxWeight = -Infinity;
-  let minWeight = Infinity;
-
   for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
-    if (edge[2] > maxWeight) maxWeight = edge[2];
-    if (edge[2] < minWeight) minWeight = edge[2];
-  }
-
-  for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
-    springs.push(
-      new Edge(
-        p,
-        0.01,
-        edge[2],
-        minWeight,
-        maxWeight,
-        nodes.get(edge[0])!,
-        nodes.get(edge[1])!,
-        graph.options
-      )
-    );
+    springs.push(new Edge(0.01, nodes.get(edge[0])!, nodes.get(edge[1])!));
   }
 }

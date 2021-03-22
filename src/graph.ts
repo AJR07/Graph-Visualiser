@@ -29,6 +29,23 @@ export default class Graph {
     this.options = options;
   }
 
+  get minWeight(): number {
+    let minWeight = Infinity;
+
+    for (const edge of Graph.adjlistToEdgelist(this.adjlist)) {
+      if (edge[2] < minWeight) minWeight = edge[2];
+    }
+    return minWeight;
+  }
+
+  get maxWeight(): number {
+    let maxWeight = -Infinity;
+    for (const edge of Graph.adjlistToEdgelist(this.adjlist)) {
+      if (edge[2] > maxWeight) maxWeight = edge[2];
+    }
+    return maxWeight;
+  }
+
   /**
    * Parses a graph from a string using the provided options
    *

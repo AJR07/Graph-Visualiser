@@ -55,7 +55,9 @@
           <h2>Display</h2>
           <fieldset>
             <div>
-              <label for="thickness-checkbox">Thickness:</label>
+              <label for="thickness-checkbox"
+                >Show weight with thickness:</label
+              >
               <input
                 type="checkbox"
                 v-model="edgeDisplayOptions.showThickness"
@@ -69,7 +71,6 @@
                 type="range"
                 min="1"
                 max="50"
-                value="10"
                 id="thickness-length"
                 v-model="edgeDisplayOptions.thickness"
                 :disabled="edgeDisplayOptions.showThickness"
@@ -78,7 +79,7 @@
           </fieldset>
           <fieldset>
             <div>
-              <label for="length-checkbox">Length:</label>
+              <label for="length-checkbox">Show weight with length:</label>
               <input
                 type="checkbox"
                 name="length-checkbox"
@@ -93,7 +94,6 @@
                 type="range"
                 min="1"
                 max="500"
-                value="200"
                 name="edge-length"
                 id="edge-length"
                 v-model="edgeDisplayOptions.length"
