@@ -186,9 +186,6 @@ npm test
 
 **Actual stuff**
 
-- ! Ability to draw arrows both ways
-- UI for options.startingIndex
-- Dim the options UI for when the particular graph type doesn't use it
 - Show/Hide menus
 - Help/Documentation box
 

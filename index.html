@@ -42,6 +42,23 @@
               id="bidirectional-checkbox"
             />
           </div>
+          <div>
+            <span>Starting index:</span>
+            <input
+              type="radio"
+              id="zero-indexed-radio"
+              value="0"
+              v-model="proxyStartingIndex"
+            />
+            <label for="zero-indexed-radio">0</label>
+            <input
+              type="radio"
+              id="one-indexed-radio"
+              value="1"
+              v-model="proxyStartingIndex"
+            />
+            <label for="one-indexed-radio">1</label>
+          </div>
           <br />
 
           <label for="graph-text">Input:</label>

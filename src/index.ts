@@ -282,6 +282,7 @@ interface VueData {
   graphText: string;
   graphOptions: GraphOptions;
   edgeDisplayOptions: EdgeDisplayOptions;
+  proxyStartingIndex: string;
   debouncedUpdateGraph: () => void;
 }
 
@@ -293,11 +294,15 @@ const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
       graphText: DEFAULT_GRAPH,
       graphOptions: DEFAULT_GRAPH_OPTIONS,
       edgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
+      proxyStartingIndex: "1",
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       debouncedUpdateGraph: () => {},
     };
   },
   watch: {
+    proxyStartingIndex(newValue: string) {
+      this.graphOptions.startingIndex = parseInt(newValue, 10);
+    },
     edgeDisplayOptions: {
       handler: function (
         newValue: EdgeDisplayOptions,
