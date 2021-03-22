@@ -22,21 +22,26 @@
             <option value="AdjMatrix">Adjacency Matrix</option>
           </select>
           <br />
-          <label for="weighted-checkbox">Weighted:</label>
-          <input
-            type="checkbox"
-            name="weighted-checkbox"
-            id="weighted-checkbox"
-            v-model="graphOptions.weighted"
-          />
-          <br />
-          <label for="bidirectional-checkbox"> Bi-directional: </label>
-          <input
-            type="checkbox"
-            v-model="graphOptions.bidirectional"
-            name="bidirectional-checkbox"
-            id="bidirectional-checkbox"
-          />
+          <div :class="{ dimmed: graphOptions.type == 'AdjMatrix' }">
+            <label for="weighted-checkbox">Weighted:</label>
+            <input
+              type="checkbox"
+              name="weighted-checkbox"
+              id="weighted-checkbox"
+              v-model="graphOptions.weighted"
+            />
+          </div>
+          <div
+            :class="{ dimmed: graphOptions.type == 'AdjMatrix' || graphOptions.type == 'AdjList' }"
+          >
+            <label for="bidirectional-checkbox"> Bi-directional: </label>
+            <input
+              type="checkbox"
+              v-model="graphOptions.bidirectional"
+              name="bidirectional-checkbox"
+              id="bidirectional-checkbox"
+            />
+          </div>
           <br />
 
           <label for="graph-text">Input:</label>
