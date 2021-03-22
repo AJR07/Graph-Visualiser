@@ -1,7 +1,6 @@
 import debounce from "lodash.debounce";
 import p5 from "p5";
 import Vue from "vue";
-import Queue from "../queue";
 import "../style.css";
 import clamp from "./clamp";
 import Edge, { DEFAULT_EDGE_DISPLAY_OPTIONS, EdgeDisplayOptions } from "./edge";
@@ -11,6 +10,7 @@ import Graph, {
   GraphOptions,
 } from "./graph";
 import GraphNode from "./node";
+import Queue from "./queue";
 
 const EPSILON = 0.0001;
 
@@ -170,6 +170,16 @@ new p5((p: p5) => {
           const left = a.pos.x < b.pos.x ? a : b;
           const right = a.pos.x < b.pos.x ? b : a;
 
+          const fromAtoB = graph.adjlist
+            .get(a.id)
+            ?.map((v) => v.first)
+            .includes(b.id);
+          const fromBtoA = graph.adjlist
+            .get(b.id)
+            ?.map((v) => v.first)
+            .includes(a.id);
+          const shouldDrawArrow = fromAtoB != fromBtoA;
+
           p.push();
 
           const v = p5.Vector.sub(right.pos, left.pos);
@@ -184,7 +194,6 @@ new p5((p: p5) => {
           p.text(`${weight}`, v.mag(), 15 + strokeWeight / 2);
           p.pop();
 
-          // todo: change this to auto detect
           const aToB = p5.Vector.sub(b.pos, a.pos);
           const arrowSize = 25;
           const lineLength = aToB.mag() - arrowSize - GraphNode.SIZE / 2;
@@ -196,10 +205,10 @@ new p5((p: p5) => {
           );
           p.stroke(255);
           p.rotate(aToB.heading());
-          p.line(0, 0, lineLength, 0);
+          p.line(0, 0, !shouldDrawArrow ? lineLength : aToB.mag(), 0);
           p.noStroke();
-          if (graph.options.bidirectional) {
-            p.translate(lineLength + strokeWeight, 0);
+          if (shouldDrawArrow) {
+            p.translate(lineLength + strokeWeight / 2, 0);
             p.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
           }
           p.pop();
