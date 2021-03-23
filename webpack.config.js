@@ -2,6 +2,7 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   entry: "./src/index.ts",
@@ -24,6 +25,11 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify(
+        process.env.NODE_ENV ?? "production"
+      ),
+    }),
     new ForkTsCheckerWebpackPlugin(),
     new CopyPlugin({
       patterns: [{ from: "index.html", to: "index.html" }],

@@ -15,7 +15,7 @@ import GraphNode from "./node";
 const EPSILON = 0.0001;
 
 // Internal representation of graph will always be adjacency list
-let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS);
+let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS)!;
 console.log(graph.adjlist);
 
 // The stuff to be drawn
@@ -165,6 +165,20 @@ new p5((p: p5) => {
     currentlyDraggedNode?.pos.set(p.mouseX, p.mouseY);
     currentlyDraggedNode?.vel.set(0, 0);
     currentlyDraggedNode?.acc.set(0, 0);
+
+    let hovering = false;
+    for (const [, node] of nodes) {
+      if (
+        p.dist(p.mouseX, p.mouseY, node.pos.x, node.pos.y) <
+        GraphNode.SIZE / 2
+      ) {
+        document.body.style.cursor = "grab";
+        hovering = true;
+      }
+    }
+    if (!hovering) {
+      document.body.style.cursor = "default";
+    }
   };
 
   p.mouseDragged = () => {
@@ -186,6 +200,13 @@ new p5((p: p5) => {
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
+
+  // for debugging
+  if (process.env.NODE_ENV == "development") {
+    p.keyPressed = () => {
+      console.log(graph);
+    };
+  }
 });
 
 interface VueData {
@@ -239,7 +260,14 @@ new Vue<VueData, { updateGraph(): void; hideShow(): void }, object, never>({
     updateGraph() {
       console.log("Updating graph");
       queue.push((p: p5) => {
-        graph = Graph.parseGraph(this.graphText, this.graphOptions);
+        const tmp = Graph.parseGraph(this.graphText, this.graphOptions);
+
+        if (!tmp) {
+          alert("Invalid graph");
+          return;
+        }
+
+        graph = tmp;
         updateNodes(p);
         updateSprings(p);
         //update Rest Length

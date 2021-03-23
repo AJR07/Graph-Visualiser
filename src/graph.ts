@@ -36,7 +36,7 @@ export default class Graph {
    * @param options The graph options
    * @returns The parsed graph
    */
-  static parseGraph(str: string, options: GraphOptions): Graph {
+  static parseGraph(str: string, options: GraphOptions): Graph | null {
     return PARSERS[options.type](str, options);
   }
 
