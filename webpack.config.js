@@ -8,7 +8,8 @@ const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
   entry: "./src/index.ts",
   mode: process.env.NODE_ENV,
-  devtool: process.env.NODE_ENV == "production" ? "source-map" : "eval-source-map",
+  devtool:
+    process.env.NODE_ENV == "production" ? "source-map" : "eval-source-map",
   module: {
     rules: [
       {
@@ -39,7 +40,10 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".js", ".html"],
     alias: {
-      vue: process.env.NODE_ENV == "development" ? "vue/dist/vue.esm.browser.js" : "vue/dist/vue.esm.browser.min.js",
+      vue:
+        process.env.NODE_ENV == "development"
+          ? "vue/dist/vue.esm.browser.js"
+          : "vue/dist/vue.esm.browser.min.js",
     },
   },
   output: {
@@ -57,12 +61,14 @@ module.exports = {
   },
   optimization: {
     minimize: true,
-    minimizer: [new TerserPlugin({
-      terserOptions: {
-        compress: {
-          drop_console: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: true,
+          },
         },
-      },
-    })],
-  }
+      }),
+    ],
+  },
 };
