@@ -283,6 +283,7 @@ interface VueData {
   graphOptions: GraphOptions;
   edgeDisplayOptions: EdgeDisplayOptions;
   proxyStartingIndex: string;
+  graphHelp: string;
   debouncedUpdateGraph: () => void;
 }
 
@@ -295,6 +296,7 @@ const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
       graphOptions: DEFAULT_GRAPH_OPTIONS,
       edgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
       proxyStartingIndex: "1",
+      graphHelp: "a",
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       debouncedUpdateGraph: () => {},
     };

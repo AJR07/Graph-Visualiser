@@ -186,8 +186,8 @@ npm test
 
 **Actual stuff**
 
-- Show/Hide menus
 - Help/Documentation box
+- Starting Index could be any number
 
 **Potential Features**
 
@@ -196,3 +196,10 @@ npm test
   - scale out OR
   - ability pan around OR
   - both
+
+**Bugs**
+- Weights not showing for AdjList graph
+- Fix
+[Error] CanvasRenderingContext2D.save() has been called without a matching restore
+[Error] CanvasRenderingContext2D.save() has been called without a matching restore() too many times. Ignoring save().
+

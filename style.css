@@ -13,7 +13,7 @@ h2 {
 }
 
 fieldset {
-  margin: 5px;
+  margin: 10px;
   border: 1px dashed black;
 }
 
@@ -41,4 +41,15 @@ fieldset {
 .dimmed {
   filter: opacity(20%);
   -webkit-filter: opacity(20%);
+}
+
+.help-box{
+  display: none;
+}
+
+#Graph:hover + .help-box{
+  display:block;
+  border-radius: 5px;
+  border:grey solid 2px;
+  background-color: grey;
 }
