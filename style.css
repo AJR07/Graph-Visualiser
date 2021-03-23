@@ -43,13 +43,13 @@ fieldset {
   -webkit-filter: opacity(20%);
 }
 
-.help-box{
+.help-box {
   display: none;
 }
 
-#Graph:hover + .help-box{
-  display:block;
+#Graph:hover + .help-box {
+  display: block;
   border-radius: 5px;
-  border:grey solid 2px;
+  border: grey solid 2px;
   background-color: grey;
 }

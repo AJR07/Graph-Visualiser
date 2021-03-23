@@ -198,8 +198,8 @@ npm test
   - both
 
 **Bugs**
+
 - Weights not showing for AdjList graph
 - Fix
-[Error] CanvasRenderingContext2D.save() has been called without a matching restore
-[Error] CanvasRenderingContext2D.save() has been called without a matching restore() too many times. Ignoring save().
-
+  [Error] CanvasRenderingContext2D.save() has been called without a matching restore
+  [Error] CanvasRenderingContext2D.save() has been called without a matching restore() too many times. Ignoring save().

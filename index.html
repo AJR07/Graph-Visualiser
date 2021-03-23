@@ -13,9 +13,7 @@
           <h2>Graph</h2>
           <label for="graphtype-select">Graph Type:</label>
           <sup id="Graph">❓</sup>
-          <p class="help-box" id="graph-help-box">
-            {{graphHelp}}
-          </p>
+          <p class="help-box" id="graph-help-box">{{graphHelp}}</p>
           <select
             name="graphtype-select"
             id="graphtype-select"
@@ -25,7 +23,6 @@
             <option value="EdgeList">Edge List</option>
             <option value="AdjMatrix">Adjacency Matrix</option>
           </select>
-
 
           <br />
           <div :class="{ dimmed: graphOptions.type == 'AdjMatrix' }">
