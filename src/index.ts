@@ -88,29 +88,6 @@ new p5((p: p5) => {
       node.applyForce(steering);
     }
 
-    // Repulse from the walls (failed attempt at keeping stuff from drifting away)
-    /*
-    for (const [, node] of nodes) {
-      let steering = p.createVector();
-      const repulseWall = (x: number, y: number) => {
-        const v = p5.Vector.sub(p.createVector(x, y), node.pos);
-        if (v.mag() < 0) return;
-        steering
-          .setMag(GraphNode.MAX_SPEED)
-          .sub(node.vel)
-          .add(v)
-          .div(v.mag() * v.mag());
-      };
- 
-      repulseWall(0, node.pos.y); // left
-      repulseWall(node.pos.x, 0); // top
-      repulseWall(p.width, node.pos.y) // right
-      repulseWall(node.pos.x, p.height); // bottom
- 
-      node.applyForce(steering);
-    }
-    */
-
     // Attracted to center
     for (const [, node] of nodes) {
       node.applyForce(
@@ -124,17 +101,6 @@ new p5((p: p5) => {
           .limit(GraphNode.MAX_FORCE * 0.7)
       );
     }
-
-    // Add some random force to keep things interesting
-    /*
-    for (const [, node] of nodes) {
-      const force = p.createVector();
-      const dir = p.noise(node.pos.x, node.pos.y);
-      force.setMag(100);
-      force.rotate(p.map(dir, 0, 1, 0, p.TWO_PI));
-      node.vel.add(force);
-    }
-    */
 
     // Force the nodes to be inside the screen
     // Basically we just clamp the position inside the screen lol
@@ -180,7 +146,9 @@ new p5((p: p5) => {
             .includes(a.id);
           const shouldDrawArrow = fromAtoB != fromBtoA;
 
-          p.push();
+          const strokeToDraw = options.showThickness
+            ? strokeWeight
+            : options.thickness;
 
           const v = p5.Vector.sub(right.pos, left.pos);
           v.div(2);
@@ -188,24 +156,24 @@ new p5((p: p5) => {
           p.noStroke();
           p.fill(255);
 
+          // Draw text
           p.push();
           p.translate(left.pos);
           p.rotate(v.heading());
-          p.text(`${weight}`, v.mag(), 15 + strokeWeight / 2);
+          p.text(`${weight}`, v.mag(), 15 + strokeToDraw / 2);
           p.pop();
 
+          // Draw arrow / line
           const aToB = p5.Vector.sub(b.pos, a.pos);
           const arrowSize = 25;
           const lineLength = aToB.mag() - arrowSize - GraphNode.SIZE / 2;
 
           p.push();
           p.translate(a.pos);
-          p.strokeWeight(
-            options.showThickness ? strokeWeight : options.thickness
-          );
+          p.strokeWeight(strokeToDraw);
           p.stroke(255);
           p.rotate(aToB.heading());
-          p.line(0, 0, !shouldDrawArrow ? lineLength : aToB.mag(), 0);
+          p.line(0, 0, shouldDrawArrow ? lineLength : aToB.mag(), 0);
           p.noStroke();
           if (shouldDrawArrow) {
             p.translate(lineLength + strokeWeight / 2, 0);
@@ -282,8 +250,10 @@ interface VueData {
   graphText: string;
   graphOptions: GraphOptions;
   edgeDisplayOptions: EdgeDisplayOptions;
+  prevEdgeDisplayOptions: EdgeDisplayOptions;
   proxyStartingIndex: string;
   graphHelp: string;
+  isUnweighted: boolean;
   debouncedUpdateGraph: () => void;
 }
 
@@ -295,8 +265,10 @@ const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
       graphText: DEFAULT_GRAPH,
       graphOptions: DEFAULT_GRAPH_OPTIONS,
       edgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
+      prevEdgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
       proxyStartingIndex: "1",
       graphHelp: "a",
+      isUnweighted: false,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       debouncedUpdateGraph: () => {},
     };
@@ -306,19 +278,20 @@ const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
       this.graphOptions.startingIndex = parseInt(newValue, 10);
     },
     edgeDisplayOptions: {
-      handler: function (
-        newValue: EdgeDisplayOptions,
-        prevValue: EdgeDisplayOptions
-      ) {
-        console.log("edgeDisplayOptions changed");
-        if (
-          newValue.length != prevValue.length ||
-          newValue.thickness != newValue.thickness
-        ) {
+      handler: function (newValue: EdgeDisplayOptions) {
+        const prevValue = this.prevEdgeDisplayOptions;
+
+        if (newValue.length != prevValue.length) {
+          console.log("using debounced");
           this.debouncedUpdateGraph();
         } else {
-          this.updateGraph();
+          if (newValue.thickness == prevValue.thickness) {
+            console.log("using normal");
+            this.updateGraph();
+          }
         }
+
+        this.prevEdgeDisplayOptions = JSON.parse(JSON.stringify(newValue));
       },
       deep: true,
     },
@@ -329,12 +302,20 @@ const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
   methods: {
     updateGraph() {
       console.log("Updating graph");
+
       queue.push((p: p5) => {
         const tmp = Graph.parseGraph(this.graphText, this.graphOptions);
 
         if (!tmp) {
           alert("Invalid graph");
           return;
+        }
+
+        this.isUnweighted = Graph.isUnweightedGraph(tmp?.adjlist);
+
+        if (this.isUnweighted) {
+          this.edgeDisplayOptions.showThickness = false;
+          this.edgeDisplayOptions.showLength = false;
         }
 
         graph = tmp;

@@ -57,6 +57,13 @@ export default class Graph {
     return PARSERS[options.type](str, options);
   }
 
+  static isUnweightedGraph(adjlist: AdjList): boolean {
+    return Array.from(adjlist.entries())
+      .map((v) => v[1].map((x) => x.second))
+      .flat()
+      .every((v) => v == 1);
+  }
+
   static adjlistToEdgelist(adjlist: AdjList): EdgeList {
     const edgeList: EdgeList = [];
 

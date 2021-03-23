@@ -79,7 +79,7 @@
         <div class="side-container" style="margin-top: 30px">
           <h2>Display</h2>
           <fieldset>
-            <div>
+            <div :class="{ dimmed: isUnweighted }">
               <label for="thickness-checkbox"
                 >Show weight with thickness:</label
               >
@@ -87,6 +87,7 @@
                 type="checkbox"
                 v-model="edgeDisplayOptions.showThickness"
                 id="thickness-checkbox"
+                :disabled="isUnweighted"
               />
             </div>
             <br />
@@ -103,13 +104,14 @@
             </div>
           </fieldset>
           <fieldset>
-            <div>
+            <div :class="{ dimmed: isUnweighted }">
               <label for="length-checkbox">Show weight with length:</label>
               <input
                 type="checkbox"
                 name="length-checkbox"
                 v-model="edgeDisplayOptions.showLength"
                 id="length-checkbox"
+                :disabled="isUnweighted"
               />
             </div>
             <br />

@@ -187,7 +187,6 @@ npm test
 **Actual stuff**
 
 - Help/Documentation box
-- Starting Index could be any number
 
 **Potential Features**
 
