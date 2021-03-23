@@ -44,4 +44,10 @@ fieldset {
 }
 
 #hide-show {
+  background-image: url("https://www.flaticon.com/svg/vstatic/svg/3388/3388848.svg?token=exp=1616485957~hmac=0f325ca357f01b5be81ef9dc44ce1369");
+  background-size: 50px 50px;
+  width: 50px; 
+  height: 50px;
+
+  background-color: black;
 }

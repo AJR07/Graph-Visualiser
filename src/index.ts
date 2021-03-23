@@ -192,12 +192,12 @@ interface VueData {
   graphText: string;
   graphOptions: GraphOptions;
   edgeDisplayOptions: EdgeDisplayOptions;
-  hidden: boolean,
+  hidden: boolean;
   debouncedUpdateGraph: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-new Vue<VueData, { updateGraph(): void, hideShow():void}, object, never>({
+new Vue<VueData, { updateGraph(): void; hideShow(): void }, object, never>({
   el: "#vue-app",
   data() {
     return {
@@ -206,7 +206,7 @@ new Vue<VueData, { updateGraph(): void, hideShow():void}, object, never>({
       edgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
       hidden: false,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      debouncedUpdateGraph: () => { },
+      debouncedUpdateGraph: () => {},
     };
   },
   watch: {
@@ -233,8 +233,8 @@ new Vue<VueData, { updateGraph(): void, hideShow():void}, object, never>({
     this.debouncedUpdateGraph = debounce(this.updateGraph, 500);
   },
   methods: {
-    hideShow: function() {
-      this.hidden = !this.hidden
+    hideShow: function () {
+      this.hidden = !this.hidden;
     },
     updateGraph() {
       console.log("Updating graph");
