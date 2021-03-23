@@ -8,101 +8,106 @@
 
   <body>
     <main>
-      <button id="hide-show" @click="hideShow">Hide</button>
       <div id="vue-app">
-        <div class="side-container">
-          <h2>Graph</h2>
-          <label for="graphtype-select">Graph Type:</label>
-          <select
-            name="graphtype-select"
-            id="graphtype-select"
-            v-model="graphOptions.type"
-          >
-            <option value="AdjList">Adjacency List</option>
-            <option value="EdgeList">Edge List</option>
-            <option value="AdjMatrix">Adjacency Matrix</option>
-          </select>
-          <br />
-          <label for="weighted-checkbox">Weighted:</label>
-          <input
-            type="checkbox"
-            name="weighted-checkbox"
-            id="weighted-checkbox"
-            v-model="graphOptions.weighted"
-          />
-          <br />
-          <label for="bidirectional-checkbox"> Bi-directional: </label>
-          <input
-            type="checkbox"
-            v-model="graphOptions.bidirectional"
-            name="bidirectional-checkbox"
-            id="bidirectional-checkbox"
-          />
-          <br />
-
-          <label for="graph-text">Input:</label>
-
-          <textarea
-            name="graph-text"
-            id="graph-text"
-            cols="30"
-            rows="10"
-            v-model="graphText"
-          ></textarea>
-          <button @click="updateGraph">Apply</button>
+        <div v-if="hidden">
+          <button id="hide-show" @click="hideShow">Hide</button>
         </div>
+        <div v-else>
+          <button id="hide-show" @click="hideShow">Hide</button>
+          <div class="side-container">
+            <h2>Graph</h2>
+            <label for="graphtype-select">Graph Type:</label>
+            <select
+              name="graphtype-select"
+              id="graphtype-select"
+              v-model="graphOptions.type"
+            >
+              <option value="AdjList">Adjacency List</option>
+              <option value="EdgeList">Edge List</option>
+              <option value="AdjMatrix">Adjacency Matrix</option>
+            </select>
+            <br />
+            <label for="weighted-checkbox">Weighted:</label>
+            <input
+              type="checkbox"
+              name="weighted-checkbox"
+              id="weighted-checkbox"
+              v-model="graphOptions.weighted"
+            />
+            <br />
+            <label for="bidirectional-checkbox"> Bi-directional: </label>
+            <input
+              type="checkbox"
+              v-model="graphOptions.bidirectional"
+              name="bidirectional-checkbox"
+              id="bidirectional-checkbox"
+            />
+            <br />
 
-        <div class="side-container" style="margin-top: 30px">
-          <h2>Display</h2>
-          <fieldset>
-            <div>
-              <label for="thickness-checkbox">Thickness:</label>
-              <input
-                type="checkbox"
-                v-model="edgeDisplayOptions.showThickness"
-                id="thickness-checkbox"
-              />
-            </div>
-            <br />
-            <div :class="{ dimmed: edgeDisplayOptions.showThickness }">
-              <label for="thickness-length">Default Thickness: </label>
-              <input
-                type="range"
-                min="1"
-                max="50"
-                value="10"
-                id="thickness-length"
-                v-model="edgeDisplayOptions.thickness"
-                :disabled="edgeDisplayOptions.showThickness"
-              />
-            </div>
-            <br />
-          </fieldset>
-          <fieldset>
-            <div>
-              <label for="length-checkbox">Length:</label>
-              <input
-                type="checkbox"
-                name="length-checkbox"
-                v-model="edgeDisplayOptions.showLength"
-                id="length-checkbox"
-              />
-            </div>
-            <br />
-            <div :class="{ dimmed: edgeDisplayOptions.showLength }">
-              <label for="Edge-length">Default Edge Length: </label>
-              <input
-                type="range"
-                min="1"
-                max="500"
-                value="200"
-                name="edge-length"
-                id="edge-length"
-                v-model="edgeDisplayOptions.length"
-                :disabled="edgeDisplayOptions.showLength"
-              />
-            </div>
-          </fieldset>
+            <label for="graph-text">Input:</label>
+
+            <textarea
+              name="graph-text"
+              id="graph-text"
+              cols="30"
+              rows="10"
+              v-model="graphText"
+            ></textarea>
+            <button @click="updateGraph">Apply</button>
+          </div>
+
+          <div class="side-container" style="margin-top: 30px">
+            <h2>Display</h2>
+            <fieldset>
+              <div>
+                <label for="thickness-checkbox">Thickness:</label>
+                <input
+                  type="checkbox"
+                  v-model="edgeDisplayOptions.showThickness"
+                  id="thickness-checkbox"
+                />
+              </div>
+              <br />
+              <div :class="{ dimmed: edgeDisplayOptions.showThickness }">
+                <label for="thickness-length">Default Thickness: </label>
+                <input
+                  type="range"
+                  min="1"
+                  max="50"
+                  value="10"
+                  id="thickness-length"
+                  v-model="edgeDisplayOptions.thickness"
+                  :disabled="edgeDisplayOptions.showThickness"
+                />
+              </div>
+              <br />
+            </fieldset>
+            <fieldset>
+              <div>
+                <label for="length-checkbox">Length:</label>
+                <input
+                  type="checkbox"
+                  name="length-checkbox"
+                  v-model="edgeDisplayOptions.showLength"
+                  id="length-checkbox"
+                />
+              </div>
+              <br />
+              <div :class="{ dimmed: edgeDisplayOptions.showLength }">
+                <label for="Edge-length">Default Edge Length: </label>
+                <input
+                  type="range"
+                  min="1"
+                  max="500"
+                  value="200"
+                  name="edge-length"
+                  id="edge-length"
+                  v-model="edgeDisplayOptions.length"
+                  :disabled="edgeDisplayOptions.showLength"
+                />
+              </div>
+            </fieldset>
+          </div>
         </div>
       </div>
     </main>

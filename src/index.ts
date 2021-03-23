@@ -192,19 +192,21 @@ interface VueData {
   graphText: string;
   graphOptions: GraphOptions;
   edgeDisplayOptions: EdgeDisplayOptions;
+  hidden: boolean,
   debouncedUpdateGraph: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-new Vue<VueData, { updateGraph(): void }, object, never>({
+new Vue<VueData, { updateGraph(): void, hideShow():void}, object, never>({
   el: "#vue-app",
   data() {
     return {
       graphText: DEFAULT_GRAPH,
       graphOptions: DEFAULT_GRAPH_OPTIONS,
       edgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
+      hidden: false,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      debouncedUpdateGraph: () => {},
+      debouncedUpdateGraph: () => { },
     };
   },
   watch: {
@@ -231,6 +233,9 @@ new Vue<VueData, { updateGraph(): void }, object, never>({
     this.debouncedUpdateGraph = debounce(this.updateGraph, 500);
   },
   methods: {
+    hideShow: function() {
+      this.hidden = !this.hidden
+    },
     updateGraph() {
       console.log("Updating graph");
       queue.push((p: p5) => {
@@ -291,17 +296,3 @@ function updateSprings(p: p5) {
     );
   }
 }
-
-new Vue({
-  el: "#hide-show",
-  data: {
-    hidden: false,
-  },
-  methods: {
-    hideShow: function () {
-      if (this.hidden)
-        document.getElementById("vue-app")?.style.display = "flex";
-      else document.getElementById("vue-app")?.style.display;
-    },
-  },
-});
