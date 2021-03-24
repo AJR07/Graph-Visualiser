@@ -262,7 +262,7 @@ interface VueData {
 // eslint-disable-next-line @typescript-eslint/ban-types
 const vm = new Vue<
   VueData,
-  { updateGraph(): void; toggleHidden(): void , toggleDisplayHidden(): void},
+  { updateGraph(): void; toggleHidden(): void; toggleDisplayHidden(): void },
   Record<string, unknown>,
   never
 >({
@@ -370,8 +370,8 @@ const vm = new Vue<
       this.graphIsHidden = !this.graphIsHidden;
     },
     toggleDisplayHidden() {
-      this.displayIsHidden = !this.displayIsHidden; 
-    }
+      this.displayIsHidden = !this.displayIsHidden;
+    },
   },
 });
 

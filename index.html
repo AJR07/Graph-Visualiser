@@ -78,10 +78,22 @@
 
         <br />
         <div id="hamburger-button" v-if="displayIsHidden">
-          <button id="show-display" @click="toggleDisplayHidden()" class="hide-show">☰</button>
+          <button
+            id="show-display"
+            @click="toggleDisplayHidden()"
+            class="hide-show"
+          >
+            ☰
+          </button>
         </div>
         <div class="side-container" style="margin-top: 30px" v-else>
-          <button id="hide-display" @click="toggleDisplayHidden()" class="hide-show">X</button>
+          <button
+            id="hide-display"
+            @click="toggleDisplayHidden()"
+            class="hide-show"
+          >
+            X
+          </button>
           <h2>Display</h2>
           <fieldset>
             <div :class="{ dimmed: isUnweighted }">
