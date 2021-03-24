@@ -255,13 +255,14 @@ interface VueData {
   graphHelp: string;
   graphIsHidden: boolean;
   isUnweighted: boolean;
+  displayIsHidden: boolean;
   debouncedUpdateGraph: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const vm = new Vue<
   VueData,
-  { updateGraph(): void; toggleHidden(): void },
+  { updateGraph(): void; toggleHidden(): void , toggleDisplayHidden(): void},
   Record<string, unknown>,
   never
 >({
@@ -276,6 +277,7 @@ const vm = new Vue<
       graphHelp: "a",
       isUnweighted: false,
       graphIsHidden: false,
+      displayIsHidden: false,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       debouncedUpdateGraph: () => {},
     };
@@ -367,6 +369,9 @@ const vm = new Vue<
     toggleHidden() {
       this.graphIsHidden = !this.graphIsHidden;
     },
+    toggleDisplayHidden() {
+      this.displayIsHidden = !this.displayIsHidden; 
+    }
   },
 });
 

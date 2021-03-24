@@ -54,10 +54,16 @@ fieldset {
   background-color: grey;
 }
 
-#hide-show {
-  background-image: url("https://www.flaticon.com/svg/vstatic/svg/3388/3388848.svg?token=exp=1616513415~hmac=32e379c53a5a07c79740ab48eba70417");
-  background-size: 50px 50px;
-  width: 50px;
-  height: 50px;
-  border: 100px red;
+.hide-show {
+  background-color: red;
+  font-size: 20px;
+  text-align: center;
+}
+
+#show {
+  background-color: yellow;
+}
+
+#show-display{
+  background-color: green;
 }
