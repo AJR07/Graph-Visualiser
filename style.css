@@ -47,23 +47,9 @@ fieldset {
   display: none;
 }
 
-#Graph:hover + .help-box {
+#help-icon:hover + .help-box {
   display: block;
   border-radius: 5px;
   border: grey solid 2px;
   background-color: grey;
-}
-
-.hide-show {
-  background-color: red;
-  font-size: 20px;
-  text-align: center;
-}
-
-#show {
-  background-color: yellow;
-}
-
-#show-display {
-  background-color: green;
 }

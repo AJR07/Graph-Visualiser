@@ -10,14 +10,16 @@
     <main>
       <div id="vue-app">
         <div id="hamburger-button" v-if="graphIsHidden">
-          <button id="show" @click="toggleHidden()" class="hide-show">☰</button>
+          <button @click="toggleHidden()">☰</button>
         </div>
         <div class="side-container" v-else>
-          <button id="hide" @click="toggleHidden()" class="hide-show">X</button>
+          <button id="hide" @click="toggleHidden()" class="hide-show-button">
+            X
+          </button>
           <h2>Graph</h2>
           <label for="graphtype-select">Graph Type:</label>
-          <sup id="Graph">❓</sup>
-          <p class="help-box" id="graph-help-box">{{graphHelp}}</p>
+          <span id="help-icon">?</span>
+          <p class="help-box">{{graphHelp}}</p>
           <select
             name="graphtype-select"
             id="graphtype-select"
@@ -87,13 +89,7 @@
           </button>
         </div>
         <div class="side-container" style="margin-top: 30px" v-else>
-          <button
-            id="hide-display"
-            @click="toggleDisplayHidden()"
-            class="hide-show"
-          >
-            X
-          </button>
+          <button @click="toggleDisplayHidden()" class="hide-show">X</button>
           <h2>Display</h2>
           <fieldset>
             <div :class="{ dimmed: isUnweighted }">
