@@ -253,12 +253,18 @@ interface VueData {
   prevEdgeDisplayOptions: EdgeDisplayOptions;
   proxyStartingIndex: string;
   graphHelp: string;
+  graphIsHidden: boolean;
   isUnweighted: boolean;
   debouncedUpdateGraph: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
+const vm = new Vue<
+  VueData,
+  { updateGraph(): void; toggleHidden(): void },
+  Record<string, unknown>,
+  never
+>({
   el: "#vue-app",
   data() {
     return {
@@ -269,6 +275,7 @@ const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
       proxyStartingIndex: "1",
       graphHelp: "a",
       isUnweighted: false,
+      graphIsHidden: false,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       debouncedUpdateGraph: () => {},
     };
@@ -356,6 +363,9 @@ const vm = new Vue<VueData, { updateGraph(): void }, object, never>({
           }
         }
       });
+    },
+    toggleHidden() {
+      this.graphIsHidden = !this.graphIsHidden;
     },
   },
 });

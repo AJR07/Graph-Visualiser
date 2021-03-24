@@ -9,7 +9,11 @@
   <body>
     <main>
       <div id="vue-app">
-        <div class="side-container">
+        <div id="hamburger-button" v-if="graphIsHidden">
+          <button id="hide-show" @click="toggleHidden()"></button>
+        </div>
+        <div class="side-container" v-else>
+          <button id="hide-show" @click="toggleHidden()"></button>
           <h2>Graph</h2>
           <label for="graphtype-select">Graph Type:</label>
           <sup id="Graph">❓</sup>
@@ -45,25 +49,21 @@
               id="bidirectional-checkbox"
             />
           </div>
-          <div>
-            <span>Starting index:</span>
-            <input
-              type="radio"
-              id="zero-indexed-radio"
-              value="0"
-              v-model="proxyStartingIndex"
-            />
-            <label for="zero-indexed-radio">0</label>
-            <input
-              type="radio"
-              id="one-indexed-radio"
-              value="1"
-              v-model="proxyStartingIndex"
-            />
-            <label for="one-indexed-radio">1</label>
-          </div>
-          <br />
-
+          <span>Starting index:</span>
+          <input
+            type="radio"
+            id="zero-indexed-radio"
+            value="0"
+            v-model="proxyStartingIndex"
+          />
+          <label for="zero-indexed-radio">0</label>
+          <input
+            type="radio"
+            id="one-indexed-radio"
+            value="1"
+            v-model="proxyStartingIndex"
+          />
+          <label for="one-indexed-radio">1</label>
           <label for="graph-text">Input:</label>
 
           <textarea
@@ -75,6 +75,8 @@
           ></textarea>
           <button @click="updateGraph">Apply</button>
         </div>
+
+        <br />
 
         <div class="side-container" style="margin-top: 30px">
           <h2>Display</h2>
