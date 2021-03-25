@@ -173,7 +173,7 @@ new p5((p: p5) => {
           p.strokeWeight(strokeToDraw);
           p.stroke(255);
           p.rotate(aToB.heading());
-          p.line(0, 0, shouldDrawArrow ? lineLength : aToB.mag(), 0);
+          p.line(0, 0, /* shouldDrawArrow ? lineLength : */ aToB.mag(), 0);
           p.noStroke();
           if (shouldDrawArrow) {
             p.translate(lineLength + strokeWeight / 2, 0);
