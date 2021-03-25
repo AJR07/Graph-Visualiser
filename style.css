@@ -52,4 +52,13 @@ fieldset {
   border-radius: 5px;
   border: grey solid 2px;
   background-color: grey;
+  margin-top: -1%;
+}
+
+#help-icon + .help-box:hover {
+  display: block;
+  border-radius: 5px;
+  border: grey solid 2px;
+  background-color: grey;
+  margin-top: -1%;
 }

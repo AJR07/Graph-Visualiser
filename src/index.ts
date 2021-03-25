@@ -387,11 +387,13 @@ const vm = new Vue<
       this.graphHelp = "";
       if (this.graphOptions.type == GraphType.EdgeList) {
         //edge list
-        if (this.graphOptions.weighted) this.graphHelp +=
+        if (this.graphOptions.weighted)
+          this.graphHelp +=
             "Format: For every line of input [a] [b] [c],  there is a edge connecting node a to node b with weight c.";
-        else this.graphHelp +=
-          "Format: For every line of input [a] [b], there is a edge connecting node a to node b with weight default to 1";
-        
+        else
+          this.graphHelp +=
+            "Format: For every line of input [a] [b], there is a edge connecting node a to node b with weight default to 1";
+
         this.link = "https://github.com/AJR07/Graph-Visualiser#2-edge-list";
       } else if (this.graphOptions.type == GraphType.AdjList) {
         //adjacency list
