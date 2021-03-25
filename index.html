@@ -17,9 +17,15 @@
             X
           </button>
           <h2>Graph</h2>
+          <br />
           <label for="graphtype-select">Graph Type:</label>
-          <span id="help-icon">?</span>
-          <p class="help-box">{{graphHelp}}</p>
+          <label id="help-icon">?</label>
+          <p class="help-box">
+            <strong>Help</strong>
+            <a v-bind:href="link">Github Readme</a>
+            <br />
+            {{graphHelp}}
+          </p>
           <select
             name="graphtype-select"
             id="graphtype-select"
