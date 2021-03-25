@@ -8,6 +8,7 @@ import Graph, {
   DEFAULT_GRAPH,
   DEFAULT_GRAPH_OPTIONS,
   GraphOptions,
+  GraphType,
 } from "./graph";
 import GraphNode from "./node";
 import Queue from "./queue";
@@ -262,7 +263,7 @@ interface VueData {
 // eslint-disable-next-line @typescript-eslint/ban-types
 const vm = new Vue<
   VueData,
-  { updateGraph(): void; toggleHidden(): void; toggleDisplayHidden(): void },
+  { updateGraph(): void; toggleHidden(): void; toggleDisplayHidden(): void; changeHiddenMessage(): void},
   Record<string, unknown>,
   never
 >({
@@ -274,7 +275,7 @@ const vm = new Vue<
       edgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
       prevEdgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
       proxyStartingIndex: "1",
-      graphHelp: "a",
+      graphHelp: "Format: For every line of input [a] [b] [c],  there is a edge connecting node a to node b with weight c. For more info, visit: https://github.com/AJR07/Graph-Visualiser#2-edge-list",
       isUnweighted: false,
       graphIsHidden: false,
       displayIsHidden: false,
@@ -365,6 +366,7 @@ const vm = new Vue<
           }
         }
       });
+      this.changeHiddenMessage();
     },
     toggleHidden() {
       this.graphIsHidden = !this.graphIsHidden;
@@ -372,6 +374,26 @@ const vm = new Vue<
     toggleDisplayHidden() {
       this.displayIsHidden = !this.displayIsHidden;
     },
+    changeHiddenMessage() {
+      //changing help message based on the user configuration
+      this.graphHelp = "";
+      if (this.graphOptions.type == GraphType.EdgeList) { //edge list
+        if (this.graphOptions.weighted) this.graphHelp += "Format: For every line of input [a] [b] [c],  there is a edge connecting node a to node b with weight c. For more info, visit: https://github.com/AJR07/Graph-Visualiser#2-edge-list"
+        else this.graphHelp += "Format: For every line of input [a] [b], there is a edge connecting node a to node b with weight default to 1. For more info, visit: https://github.com/AJR07/Graph-Visualiser#2-edge-list" 
+      }
+      else if (this.graphOptions.type == GraphType.AdjList) { //adjacency list
+        this.graphHelp += "The bidirectional option does not apply here"
+        if (this.graphOptions.weighted) this.graphHelp += "Format: ith line contains [n1] [w1] [n2] [w2] ..., where n is the node its connected to and w is the weight";
+        else this.graphHelp += "Format: ith line contains all the nodes i is connected to";
+
+        this.graphHelp += "For more info, visit: https://github.com/AJR07/Graph-Visualiser#1-adjacency-list"
+      }
+      else { //adjacency matrix
+        this.graphHelp += "Format: For every ith line, the nth number in that line (space separated) means there is a edge connecting node i to node n. If the graph is weighted, then the weight of the edge connecting node i to node n is the nth number at the ith row.";
+        this.graphHelp += "Both the bidirectional and the weighted options doesn't apply here. If the graph is bidirectional, the matrix should be symmetrical, if the graph is not weighted, all edges that are connected should have a weight of 1";
+        this.graphHelp += "For more info, visit: https://github.com/AJR07/Graph-Visualiser#3-adjacency-matrix"
+      }
+    }
   },
 });
 
