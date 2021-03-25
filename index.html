@@ -19,13 +19,6 @@
           <h2>Graph</h2>
           <br />
           <label for="graphtype-select">Graph Type:</label>
-          <label id="help-icon">?</label>
-          <p class="help-box">
-            <strong>Help</strong>
-            <a v-bind:href="link">Github Readme</a>
-            <br />
-            {{graphHelp}}
-          </p>
           <select
             name="graphtype-select"
             id="graphtype-select"
@@ -35,6 +28,14 @@
             <option value="EdgeList">Edge List</option>
             <option value="AdjMatrix">Adjacency Matrix</option>
           </select>
+          <label id="help-icon">?</label>
+          <p class="help-box">
+            <strong>Help</strong>
+            <a v-bind:href="link">Github Readme</a>
+            <br />
+            {{graphHelp}}
+          </p>
+
 
           <br />
           <div :class="{ dimmed: graphOptions.type == 'AdjMatrix' }">
