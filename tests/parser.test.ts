@@ -43,11 +43,14 @@ const testFn = (
   expected: AdjList
 ) => {
   expect(
-    equalAdjlist(Graph.parseGraph(graphStr, graphOptions)?.adjlist, expected)
+    equalAdjlist(
+      (Graph.parseGraph(graphStr, graphOptions) as Graph).adjlist,
+      expected
+    )
   ).toBe(true);
 };
 const negativeTestFn = (str: string, options: GraphOptions) => {
-  expect(Graph.parseGraph(str, options)).toBeNull();
+  expect(Graph.parseGraph(str, options)).not.toBeInstanceOf(Graph);
 };
 
 describe("Edge List", () => {

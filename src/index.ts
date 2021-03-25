@@ -10,13 +10,23 @@ import Graph, {
   GraphOptions,
 } from "./graph";
 import GraphNode from "./node";
+import { hasMultipleEdges } from "./parsers";
 import Queue from "./queue";
 
 const EPSILON = 0.0001;
 
 // Internal representation of graph will always be adjacency list
-let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS)!;
-console.log(graph.adjlist);
+let graph: Graph = Graph.parseGraph(
+  DEFAULT_GRAPH,
+  DEFAULT_GRAPH_OPTIONS
+) as Graph;
+console.log(graph);
+
+console.log(
+  hasMultipleEdges(
+    (Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS) as Graph).adjlist
+  )
+);
 
 // The stuff to be drawn
 // Nodes are graph nodes and are just circles
@@ -315,12 +325,12 @@ const vm = new Vue<
       queue.push((p: p5) => {
         const tmp = Graph.parseGraph(this.graphText, this.graphOptions);
 
-        if (!tmp) {
-          alert("Invalid graph");
+        if (!(tmp instanceof Graph)) {
+          alert(tmp);
           return;
         }
 
-        this.isUnweighted = Graph.isUnweightedGraph(tmp?.adjlist);
+        this.isUnweighted = Graph.isUnweightedGraph(tmp.adjlist);
 
         if (this.isUnweighted) {
           this.edgeDisplayOptions.showThickness = false;
