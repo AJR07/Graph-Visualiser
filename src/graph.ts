@@ -29,6 +29,23 @@ export default class Graph {
     this.options = options;
   }
 
+  get minWeight(): number {
+    let minWeight = Infinity;
+
+    for (const edge of Graph.adjlistToEdgelist(this.adjlist)) {
+      if (edge[2] < minWeight) minWeight = edge[2];
+    }
+    return minWeight;
+  }
+
+  get maxWeight(): number {
+    let maxWeight = -Infinity;
+    for (const edge of Graph.adjlistToEdgelist(this.adjlist)) {
+      if (edge[2] > maxWeight) maxWeight = edge[2];
+    }
+    return maxWeight;
+  }
+
   /**
    * Parses a graph from a string using the provided options
    *
@@ -36,8 +53,15 @@ export default class Graph {
    * @param options The graph options
    * @returns The parsed graph
    */
-  static parseGraph(str: string, options: GraphOptions): Graph | null {
+  static parseGraph(str: string, options: GraphOptions): Graph | string {
     return PARSERS[options.type](str, options);
+  }
+
+  static isUnweightedGraph(adjlist: AdjList): boolean {
+    return Array.from(adjlist.entries())
+      .map((v) => v[1].map((x) => x.second))
+      .flat()
+      .every((v) => v == 1);
   }
 
   static adjlistToEdgelist(adjlist: AdjList): EdgeList {

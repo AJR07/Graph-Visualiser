@@ -13,7 +13,7 @@ h2 {
 }
 
 fieldset {
-  margin: 5px;
+  margin: 10px;
   border: 1px dashed black;
 }
 
@@ -43,11 +43,22 @@ fieldset {
   -webkit-filter: opacity(20%);
 }
 
-#hide-show {
-  background-image: url("https://www.flaticon.com/svg/vstatic/svg/3388/3388848.svg?token=exp=1616485957~hmac=0f325ca357f01b5be81ef9dc44ce1369");
-  background-size: 50px 50px;
-  width: 50px;
-  height: 50px;
+.help-box {
+  display: none;
+}
 
-  background-color: black;
+#help-icon:hover + .help-box {
+  display: block;
+  border-radius: 5px;
+  border: grey solid 2px;
+  background-color: grey;
+  margin-top: -1%;
+}
+
+#help-icon + .help-box:hover {
+  display: block;
+  border-radius: 5px;
+  border: grey solid 2px;
+  background-color: grey;
+  margin-top: -1%;
 }

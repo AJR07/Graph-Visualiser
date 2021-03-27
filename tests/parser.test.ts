@@ -42,12 +42,12 @@ const testFn = (
   graphOptions: GraphOptions,
   expected: AdjList
 ) => {
-  expect(
-    equalAdjlist(Graph.parseGraph(graphStr, graphOptions)?.adjlist, expected)
-  ).toBe(true);
+  const graph = Graph.parseGraph(graphStr, graphOptions) as Graph;
+  console.log(graph);
+  expect(equalAdjlist(graph.adjlist, expected)).toBe(true);
 };
 const negativeTestFn = (str: string, options: GraphOptions) => {
-  expect(Graph.parseGraph(str, options)).toBeNull();
+  expect(Graph.parseGraph(str, options)).not.toBeInstanceOf(Graph);
 };
 
 describe("Edge List", () => {
@@ -143,7 +143,7 @@ describe("Edge List", () => {
     ],
     // Test different starting index
     [
-      "0 1\n0 2\n1 5\n3 5\n3 5\n4 1",
+      "0 1\n0 2\n1 5\n3 5\n4 1",
       {
         type: GraphType.EdgeList,
         bidirectional: false,
@@ -152,10 +152,10 @@ describe("Edge List", () => {
       },
       new Map([
         [0, [new Pair(1, 1), new Pair(2, 1)]],
-        [1, [new Pair(0, 1)]],
+        [1, [new Pair(5, 1)]],
         [2, []],
         [3, [new Pair(5, 1)]],
-        [4, [new Pair(5, 1)]],
+        [4, [new Pair(1, 1)]],
         [5, []],
       ]),
     ],
@@ -243,6 +243,21 @@ describe("Adjacency List", () => {
         [3, [new Pair(1, 1), new Pair(2, 1)]],
         [4, [new Pair(3, 1)]],
         [5, [new Pair(1, 1), new Pair(4, 1)]],
+      ]),
+    ],
+    [
+      "2 3\n1 3\n4 1",
+      {
+        type: GraphType.AdjList,
+        bidirectional: true,
+        weighted: false,
+        startingIndex: 1,
+      },
+      new Map([
+        [1, [new Pair(2, 1), new Pair(3, 1)]],
+        [2, [new Pair(1, 1), new Pair(3, 1)]],
+        [3, [new Pair(1, 1), new Pair(4, 1)]],
+        [4, []],
       ]),
     ],
   ])("Positive test:\n" + formatStr, testFn);

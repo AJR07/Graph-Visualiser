@@ -184,8 +184,21 @@ npm test
 
 ## TODO
 
+**Actual stuff**
+
+- Help/Documentation box
+
+**Potential Features**
+
 - Support for multiple edges / self edges
 - Figure out what to do when graph is too big for screen:
   - scale out OR
   - ability pan around OR
   - both
+
+**Bugs**
+
+- Weights not showing for AdjList graph
+- Fix
+  [Error] CanvasRenderingContext2D.save() has been called without a matching restore
+  [Error] CanvasRenderingContext2D.save() has been called without a matching restore() too many times. Ignoring save().

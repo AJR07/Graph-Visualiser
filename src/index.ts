@@ -1,7 +1,6 @@
 import debounce from "lodash.debounce";
 import p5 from "p5";
 import Vue from "vue";
-import Queue from "../queue";
 import "../style.css";
 import clamp from "./clamp";
 import Edge, { DEFAULT_EDGE_DISPLAY_OPTIONS, EdgeDisplayOptions } from "./edge";
@@ -9,14 +8,26 @@ import Graph, {
   DEFAULT_GRAPH,
   DEFAULT_GRAPH_OPTIONS,
   GraphOptions,
+  GraphType,
 } from "./graph";
 import GraphNode from "./node";
+import { hasMultipleEdges } from "./parsers";
+import Queue from "./queue";
 
 const EPSILON = 0.0001;
 
 // Internal representation of graph will always be adjacency list
-let graph = Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS)!;
-console.log(graph.adjlist);
+let graph: Graph = Graph.parseGraph(
+  DEFAULT_GRAPH,
+  DEFAULT_GRAPH_OPTIONS
+) as Graph;
+console.log(graph);
+
+console.log(
+  hasMultipleEdges(
+    (Graph.parseGraph(DEFAULT_GRAPH, DEFAULT_GRAPH_OPTIONS) as Graph).adjlist
+  )
+);
 
 // The stuff to be drawn
 // Nodes are graph nodes and are just circles
@@ -40,11 +51,7 @@ new p5((p: p5) => {
     updateNodes(p);
 
     // Create springs (dfs)
-    // The idea is that when you dfs you visit every edge once
-    // So you create a spring connecting the 2 nodes
-    // Right now it doesn't deal with one-directional edges
-    // Imma deal with that later
-    updateSprings(p);
+    updateSprings();
   };
 
   p.draw = () => {
@@ -92,29 +99,6 @@ new p5((p: p5) => {
       node.applyForce(steering);
     }
 
-    // Repulse from the walls (failed attempt at keeping stuff from drifting away)
-    /*
-    for (const [, node] of nodes) {
-      let steering = p.createVector();
-      const repulseWall = (x: number, y: number) => {
-        const v = p5.Vector.sub(p.createVector(x, y), node.pos);
-        if (v.mag() < 0) return;
-        steering
-          .setMag(GraphNode.MAX_SPEED)
-          .sub(node.vel)
-          .add(v)
-          .div(v.mag() * v.mag());
-      };
- 
-      repulseWall(0, node.pos.y); // left
-      repulseWall(node.pos.x, 0); // top
-      repulseWall(p.width, node.pos.y) // right
-      repulseWall(node.pos.x, p.height); // bottom
- 
-      node.applyForce(steering);
-    }
-    */
-
     // Attracted to center
     for (const [, node] of nodes) {
       node.applyForce(
@@ -129,17 +113,6 @@ new p5((p: p5) => {
       );
     }
 
-    // Add some random force to keep things interesting
-    /*
-    for (const [, node] of nodes) {
-      const force = p.createVector();
-      const dir = p.noise(node.pos.x, node.pos.y);
-      force.setMag(100);
-      force.rotate(p.map(dir, 0, 1, 0, p.TWO_PI));
-      node.vel.add(force);
-    }
-    */
-
     // Force the nodes to be inside the screen
     // Basically we just clamp the position inside the screen lol
     for (const [, node] of nodes) {
@@ -149,10 +122,83 @@ new p5((p: p5) => {
       );
     }
 
-    // Update and draw all springs
+    // Draw the edges
+    {
+      for (const [from, x] of graph.adjlist) {
+        for (const y of x) {
+          const to = y.first;
+          const weight = y.second;
+
+          const options: EdgeDisplayOptions = vm.$data.edgeDisplayOptions;
+
+          // console.log(`options.showThickness: ${options.showThickness}`);
+          // console.log(`options.thickness: ${options.thickness}`);
+
+          const strokeWeight = p.map(
+            weight,
+            graph.minWeight,
+            graph.maxWeight,
+            2,
+            10
+          );
+
+          const a = nodes.get(from)!;
+          const b = nodes.get(to)!;
+          const left = a.pos.x < b.pos.x ? a : b;
+          const right = a.pos.x < b.pos.x ? b : a;
+
+          const fromAtoB = graph.adjlist
+            .get(a.id)
+            ?.map((v) => v.first)
+            .includes(b.id);
+          const fromBtoA = graph.adjlist
+            .get(b.id)
+            ?.map((v) => v.first)
+            .includes(a.id);
+          const shouldDrawArrow = fromAtoB != fromBtoA;
+
+          const strokeToDraw = options.showThickness
+            ? strokeWeight
+            : options.thickness;
+
+          const v = p5.Vector.sub(right.pos, left.pos);
+          v.div(2);
+
+          p.noStroke();
+          p.fill(255);
+
+          // Draw text
+          p.push();
+          p.translate(left.pos);
+          p.rotate(v.heading());
+          p.text(`${weight}`, v.mag(), 15 + strokeToDraw / 2);
+          p.pop();
+
+          // Draw arrow / line
+          const aToB = p5.Vector.sub(b.pos, a.pos);
+          const arrowSize = 25;
+          const lineLength = aToB.mag() - arrowSize - GraphNode.SIZE / 2;
+
+          p.push();
+          p.translate(a.pos);
+          p.strokeWeight(strokeToDraw);
+          p.stroke(255);
+          p.rotate(aToB.heading());
+          p.line(0, 0, /* shouldDrawArrow ? lineLength : */ aToB.mag(), 0);
+          p.noStroke();
+          if (shouldDrawArrow) {
+            p.translate(lineLength + strokeWeight / 2, 0);
+            p.triangle(0, arrowSize / 2, 0, -arrowSize / 2, arrowSize, 0);
+          }
+          p.pop();
+        }
+      }
+    }
+
+    // Update all springs
     for (const spring of springs) {
       spring.update();
-      spring.show(p);
+      // spring.show(p);
     }
 
     // Update and draw all nodes
@@ -204,7 +250,9 @@ new p5((p: p5) => {
   // for debugging
   if (process.env.NODE_ENV == "development") {
     p.keyPressed = () => {
-      console.log(graph);
+      if (p.key == "x") {
+        console.log(graph);
+      }
     };
   }
 });
@@ -213,39 +261,65 @@ interface VueData {
   graphText: string;
   graphOptions: GraphOptions;
   edgeDisplayOptions: EdgeDisplayOptions;
-  hidden: boolean;
+  prevEdgeDisplayOptions: EdgeDisplayOptions;
+  proxyStartingIndex: string;
+  graphHelp: string;
+  graphIsHidden: boolean;
+  isUnweighted: boolean;
+  displayIsHidden: boolean;
+  link: string;
   debouncedUpdateGraph: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-new Vue<VueData, { updateGraph(): void; hideShow(): void }, object, never>({
+const vm = new Vue<
+  VueData,
+  {
+    updateGraph(): void;
+    toggleHidden(): void;
+    toggleDisplayHidden(): void;
+    changeHiddenMessage(): void;
+  },
+  Record<string, unknown>,
+  never
+>({
   el: "#vue-app",
   data() {
     return {
       graphText: DEFAULT_GRAPH,
       graphOptions: DEFAULT_GRAPH_OPTIONS,
       edgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
-      hidden: false,
+      prevEdgeDisplayOptions: DEFAULT_EDGE_DISPLAY_OPTIONS,
+      proxyStartingIndex: "1",
+      graphHelp:
+        "Format: For every line of input [a] [b] [c],  there is a edge connecting node a to node b with weight c. For more info, visit: https://github.com/AJR07/Graph-Visualiser#2-edge-list",
+      isUnweighted: false,
+      graphIsHidden: false,
+      displayIsHidden: false,
+      link: "https://github.com/AJR07/Graph-Visualiser#2-edge-list",
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       debouncedUpdateGraph: () => {},
     };
   },
   watch: {
+    proxyStartingIndex(newValue: string) {
+      this.graphOptions.startingIndex = parseInt(newValue, 10);
+    },
     edgeDisplayOptions: {
-      handler: function (
-        newValue: EdgeDisplayOptions,
-        prevValue: EdgeDisplayOptions
-      ) {
-        console.log("edgeDisplayOptions changed");
-        Edge.displayOptions = this.edgeDisplayOptions;
-        if (
-          newValue.length != prevValue.length ||
-          newValue.thickness != newValue.thickness
-        ) {
+      handler: function (newValue: EdgeDisplayOptions) {
+        const prevValue = this.prevEdgeDisplayOptions;
+
+        if (newValue.length != prevValue.length) {
+          console.log("using debounced");
           this.debouncedUpdateGraph();
         } else {
-          this.updateGraph();
+          if (newValue.thickness == prevValue.thickness) {
+            console.log("using normal");
+            this.updateGraph();
+          }
         }
+
+        this.prevEdgeDisplayOptions = JSON.parse(JSON.stringify(newValue));
       },
       deep: true,
     },
@@ -259,29 +333,102 @@ new Vue<VueData, { updateGraph(): void; hideShow(): void }, object, never>({
     },
     updateGraph() {
       console.log("Updating graph");
+
       queue.push((p: p5) => {
         const tmp = Graph.parseGraph(this.graphText, this.graphOptions);
 
-        if (!tmp) {
-          alert("Invalid graph");
+        if (!(tmp instanceof Graph)) {
+          alert(tmp);
           return;
+        }
+
+        this.isUnweighted = Graph.isUnweightedGraph(tmp.adjlist);
+
+        if (this.isUnweighted) {
+          this.edgeDisplayOptions.showThickness = false;
+          this.edgeDisplayOptions.showLength = false;
         }
 
         graph = tmp;
         updateNodes(p);
-        updateSprings(p);
-        //update Rest Length
-        if (!this.edgeDisplayOptions.showLength)
+        updateSprings();
+
+        // Length
+        if (!this.edgeDisplayOptions.showLength) {
           for (const spring of springs) {
             spring.restLength = this.edgeDisplayOptions.length;
           }
-        else {
+        } else {
           for (const spring of springs) {
-            spring.restLength =
-              (spring.weight * this.edgeDisplayOptions.length) / 2; //allows the default length bar to still kinda affect it by multiplying it
+            let weight: number | null = null;
+
+            for (const edgePair of Graph.adjlistToEdgelist(graph.adjlist)) {
+              if (
+                (edgePair[0] == spring.a.id && edgePair[1] == spring.b.id) ||
+                (edgePair[1] == spring.a.id && edgePair[0] == spring.b.id)
+              ) {
+                weight = edgePair[2];
+                break;
+              }
+            }
+
+            if (!weight) {
+              console.error("Weight is null");
+              continue;
+            }
+
+            spring.restLength = p.map(
+              weight,
+              graph.minWeight,
+              graph.maxWeight,
+              100,
+              500
+            );
           }
         }
       });
+      this.changeHiddenMessage();
+    },
+    toggleHidden() {
+      this.graphIsHidden = !this.graphIsHidden;
+    },
+    toggleDisplayHidden() {
+      this.displayIsHidden = !this.displayIsHidden;
+    },
+    changeHiddenMessage() {
+      //changing help message based on the user configuration
+      this.graphHelp = "";
+      if (this.graphOptions.type == GraphType.EdgeList) {
+        //edge list
+        if (this.graphOptions.weighted)
+          this.graphHelp +=
+            "Format: For every line of input [a] [b] [c],  there is a edge connecting node a to node b with weight c.";
+        else
+          this.graphHelp +=
+            "Format: For every line of input [a] [b], there is a edge connecting node a to node b with weight default to 1";
+
+        this.link = "https://github.com/AJR07/Graph-Visualiser#2-edge-list";
+      } else if (this.graphOptions.type == GraphType.AdjList) {
+        //adjacency list
+        this.graphHelp += "The bidirectional option does not apply here";
+        if (this.graphOptions.weighted)
+          this.graphHelp +=
+            "Format: ith line contains [n1] [w1] [n2] [w2] ..., where n is the node its connected to and w is the weight";
+        else
+          this.graphHelp +=
+            "Format: ith line contains all the nodes i is connected to";
+
+        this.link =
+          "https://github.com/AJR07/Graph-Visualiser#1-adjacency-list";
+      } else {
+        //adjacency matrix
+        this.graphHelp +=
+          "Format: For every ith line, the nth number in that line (space separated) means there is a edge connecting node i to node n. If the graph is weighted, then the weight of the edge connecting node i to node n is the nth number at the ith row.";
+        this.graphHelp +=
+          "Both the bidirectional and the weighted options doesn't apply here. If the graph is bidirectional, the matrix should be symmetrical, if the graph is not weighted, all edges that are connected should have a weight of 1";
+        this.link =
+          "https://github.com/AJR07/Graph-Visualiser#3-adjacency-matrix";
+      }
     },
   },
 });
@@ -297,30 +444,10 @@ function updateNodes(p: p5) {
   }
 }
 
-function updateSprings(p: p5) {
+function updateSprings() {
   springs = [];
 
-  let maxWeight = -Infinity;
-  let minWeight = Infinity;
-
   for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
-    if (edge[2] > maxWeight) maxWeight = edge[2];
-    if (edge[2] < minWeight) minWeight = edge[2];
-  }
-
-  for (const edge of Graph.adjlistToEdgelist(graph.adjlist)) {
-    springs.push(
-      new Edge(
-        p,
-        0.01,
-        edge[2],
-        minWeight,
-        maxWeight,
-        nodes.get(edge[0])!,
-        nodes.get(edge[1])!,
-        graph.options.bidirectional,
-        graph.options.weighted
-      )
-    );
+    springs.push(new Edge(0.01, nodes.get(edge[0])!, nodes.get(edge[1])!));
   }
 }
