@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- <link rel="stylesheet" type="text/css" href="style.css" /> -->
     <meta charset="utf-8" />
     <script defer src="bundle.js"></script>
   </head>
@@ -9,7 +8,7 @@
   <body>
     <main>
       <div id="vue-app">
-        <div id="hamburger-button" v-if="graphIsHidden">
+        <div id="hamburger-button" v-if="graphOptionsIsHidden">
           <button @click="toggleHidden()">☰</button>
         </div>
         <div class="side-container" v-else>

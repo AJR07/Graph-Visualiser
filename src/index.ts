@@ -264,14 +264,13 @@ interface VueData {
   prevEdgeDisplayOptions: EdgeDisplayOptions;
   proxyStartingIndex: string;
   graphHelp: string;
-  graphIsHidden: boolean;
+  graphOptionsIsHidden: boolean;
   isUnweighted: boolean;
   displayIsHidden: boolean;
   link: string;
   debouncedUpdateGraph: () => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 const vm = new Vue<
   VueData,
   {
@@ -280,7 +279,8 @@ const vm = new Vue<
     toggleDisplayHidden(): void;
     changeHiddenMessage(): void;
   },
-  Record<string, unknown>,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  object,
   never
 >({
   el: "#vue-app",
@@ -294,7 +294,7 @@ const vm = new Vue<
       graphHelp:
         "Format: For every line of input [a] [b] [c],  there is a edge connecting node a to node b with weight c. For more info, visit: https://github.com/AJR07/Graph-Visualiser#2-edge-list",
       isUnweighted: false,
-      graphIsHidden: false,
+      graphOptionsIsHidden: false,
       displayIsHidden: false,
       link: "https://github.com/AJR07/Graph-Visualiser#2-edge-list",
       // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -328,9 +328,6 @@ const vm = new Vue<
     this.debouncedUpdateGraph = debounce(this.updateGraph, 500);
   },
   methods: {
-    hideShow: function () {
-      this.hidden = !this.hidden;
-    },
     updateGraph() {
       console.log("Updating graph");
 
@@ -390,7 +387,7 @@ const vm = new Vue<
       this.changeHiddenMessage();
     },
     toggleHidden() {
-      this.graphIsHidden = !this.graphIsHidden;
+      this.graphOptionsIsHidden = !this.graphOptionsIsHidden;
     },
     toggleDisplayHidden() {
       this.displayIsHidden = !this.displayIsHidden;
